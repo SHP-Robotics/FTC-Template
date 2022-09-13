@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.roadrunner.RoadRunnerMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.RRMecanumDrive;
 
 import java.util.Objects;
 
@@ -46,7 +46,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    private RoadRunnerMecanumDrive drive;
+    private RRMecanumDrive drive;
 
     enum Mode {
         DRIVER_MODE,
@@ -70,7 +70,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        drive = new RoadRunnerMecanumDrive(hardwareMap);
+        drive = new RRMecanumDrive(hardwareMap);
 
         mode = Mode.TUNING_MODE;
 

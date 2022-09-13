@@ -10,14 +10,14 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 public class SHPFourWheelDrive {
     public final SHPMotor[] motors;
 
-    public SHPFourWheelDrive(HardwareMap hardwareMap, String[] deviceNames) {
+    public SHPFourWheelDrive(HardwareMap hardwareMap, String[] motorNames) {
         // 0 -> left front
         // 1 -> left rear
         // 2 -> right front
         // 3 -> right rear
         motors = new SHPMotor[4];
         for (int i = 0; i < motors.length; i++) {
-            motors[i] = new SHPMotor(hardwareMap, deviceNames[i]);
+            motors[i] = new SHPMotor(hardwareMap, motorNames[i]);
         }
         motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);

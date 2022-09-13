@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class SHPTankDrive extends SHPFourWheelDrive {
 
-    public SHPTankDrive(HardwareMap hardwareMap, String[] deviceNames) {
-        super(hardwareMap, deviceNames);
+    public SHPTankDrive(HardwareMap hardwareMap, String[] motorNames) {
+        super(hardwareMap, motorNames);
     }
 
     public void tank(double leftPower, double rightPower) {

@@ -54,7 +54,7 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class RoadRunnerMecanumDrive extends MecanumDrive {
+public class RRMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
@@ -80,7 +80,7 @@ public class RoadRunnerMecanumDrive extends MecanumDrive {
     private final BNO055IMU imu;
     private final VoltageSensor batteryVoltageSensor;
 
-    public RoadRunnerMecanumDrive(HardwareMap hardwareMap) {
+    public RRMecanumDrive(HardwareMap hardwareMap, String[] motorNames) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
@@ -104,10 +104,10 @@ public class RoadRunnerMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         BNO055IMUUtil.remapAxes(imu, AxesOrder.ZYX, AxesSigns.PPN);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
+        leftFront = hardwareMap.get(DcMotorEx.class, motorNames[0]);
+        leftRear = hardwareMap.get(DcMotorEx.class, motorNames[1]);
+        rightFront = hardwareMap.get(DcMotorEx.class, motorNames[2]);
+        rightRear = hardwareMap.get(DcMotorEx.class, motorNames[3]);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 

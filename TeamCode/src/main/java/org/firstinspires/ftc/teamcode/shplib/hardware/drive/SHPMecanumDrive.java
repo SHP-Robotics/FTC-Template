@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class SHPMecanumDrive extends SHPFourWheelDrive {
 
-    public SHPMecanumDrive(HardwareMap hardwareMap, String[] deviceNames) {
-        super(hardwareMap, deviceNames);
+    public SHPMecanumDrive(HardwareMap hardwareMap, String[] motorNames) {
+        super(hardwareMap, motorNames);
     }
 
     public void mecanum(double leftY, double leftX, double rightX) {
