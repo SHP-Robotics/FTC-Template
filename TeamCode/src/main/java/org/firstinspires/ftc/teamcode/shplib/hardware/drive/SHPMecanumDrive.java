@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.shplib.hardware.drive;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.shplib.hardware.sensors.SHPIMU;
-
 public class SHPMecanumDrive extends SHPFourWheelDrive {
-    private SHPIMU imu;
 
     public SHPMecanumDrive(HardwareMap hardwareMap, String[] deviceNames) {
         super(hardwareMap, deviceNames);
