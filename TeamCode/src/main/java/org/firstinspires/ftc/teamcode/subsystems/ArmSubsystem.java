@@ -1,34 +1,34 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 
+// Use this class as a reference for creating new subsystems
+
 public class ArmSubsystem extends Subsystem {
-    public final SHPMotor arm;
-    public final SHPMotor elevator;
+    public final SHPMotor slide;
+    public final SHPMotor actuator;
 
     public enum State {
         TOP,
         MIDDLE,
         BOTTOM,
-        DISABLE
     }
 
     private State state;
 
     public ArmSubsystem(HardwareMap hardwareMap) {
-        arm = new SHPMotor(hardwareMap, "arm");
-        arm.enablePositionPID(0.002);
-//        arm.setStaticVoltage(0.05);
-        arm.setPositionErrorTolerance(50);
-        elevator = new SHPMotor(hardwareMap, "elevator");
-        elevator.enablePositionPID(0.005);
-        elevator.setPositionErrorTolerance(50);
+        slide = new SHPMotor(hardwareMap, Constants.Arm.kSlideName);
+        slide.enablePositionPID(Constants.Arm.kSlideP);
+        slide.setPositionErrorTolerance(Constants.Arm.kSlideTolerance);
+
+        actuator = new SHPMotor(hardwareMap, Constants.Arm.kActuatorName);
+        actuator.enablePositionPID(Constants.Arm.kActuatorP);
+        actuator.setPositionErrorTolerance(Constants.Arm.kActuatorTolerance);
 
         this.state = State.BOTTOM;
     }
@@ -48,7 +48,7 @@ public class ArmSubsystem extends Subsystem {
     }
 
     public boolean atSetpoint() {
-        return arm.atPositionSetpoint() && elevator.atPositionSetpoint();
+        return slide.atPositionSetpoint() && actuator.atPositionSetpoint();
     }
 
     public boolean atBottom() {
@@ -57,29 +57,25 @@ public class ArmSubsystem extends Subsystem {
 
     @Override
     public void periodic(Telemetry telemetry) {
-        telemetry.addData("arm enc: ", arm.getPosition());
-        telemetry.addData("elevator enc: ", elevator.getPosition());
+        telemetry.addData("slide enc: ", slide.getPosition());
+        telemetry.addData("actuator enc: ", actuator.getPosition());
         telemetry.addData("arm at setpoint: ", atSetpoint() ? "true" : "false");
 
-        if (this.state != State.DISABLE && arm.isMotorDisabled())  arm.setMotorEnable();
         switch (state) {
             case TOP:
-                arm.setPosition(600);
-                elevator.setPosition(2500);
+                slide.setPosition(Constants.Arm.kSlideTop);
+                actuator.setPosition(Constants.Arm.kActuatorTop);
                 telemetry.addData("state: ", "TOP");
                 break;
             case MIDDLE:
-                arm.setPosition(600);
-                elevator.setPosition(1000);
+                slide.setPosition(Constants.Arm.kSlideMiddle);
+                actuator.setPosition(Constants.Arm.kActuatorMiddle);
                 telemetry.addData("state: ", "MIDDLE");
                 break;
             case BOTTOM:
-                arm.setPosition(10);
-                elevator.setPosition(10);
+                slide.setPosition(Constants.Arm.kSlideBottom);
+                actuator.setPosition(Constants.Arm.kActuatorBottom);
                 telemetry.addData("state: ", "BOTTOM");
-                break;
-            case DISABLE:
-                arm.setMotorDisable();
                 break;
         }
     }

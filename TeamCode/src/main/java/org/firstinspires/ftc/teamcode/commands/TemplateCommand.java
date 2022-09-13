@@ -13,18 +13,28 @@ public class TemplateCommand extends Command {
         this.template = template;
     }
 
+    // Called once when the command is initially schedule
+    @Override
+    public void init() {
+
+    }
+
+    // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
 
     }
 
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
-
+    // Called once after isFinished() returns true
     @Override
     public void end() {
 
+    }
+
+    // Specifies whether or not the command has finished
+    // Returning true causes execute() to be called once
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

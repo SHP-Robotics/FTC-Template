@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers;
 
+import org.firstinspires.ftc.teamcode.Constants;
+
 public class PositionPID extends PIDController {
     private double currentPosition;
 
     public PositionPID(double kP, double currentPosition) {
-        super(kP);
+        super(kP * Constants.kPositionPIDFactor);
         setCurrentPosition(currentPosition);
     }
 
     public PositionPID(double kP, double kI, double kD, double currentPosition) {
-        super(kP, kI, kD);
+        super(kP * Constants.kPositionPIDFactor, kI * Constants.kPositionPIDFactor, kD * Constants.kPositionPIDFactor);
         setCurrentPosition(currentPosition);
     }
 

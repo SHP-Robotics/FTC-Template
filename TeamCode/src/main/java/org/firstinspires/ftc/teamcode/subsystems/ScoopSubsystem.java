@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
-import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 
 public class ScoopSubsystem extends Subsystem {
     public final Servo scoop;
@@ -22,7 +19,7 @@ public class ScoopSubsystem extends Subsystem {
     private State state;
 
     public ScoopSubsystem(HardwareMap hardwareMap) {
-        scoop = hardwareMap.get(Servo.class, "scoop");
+        scoop = hardwareMap.get(Servo.class, Constants.Scoop.kScoopName);
 
         this.state = State.BOTTOM;
     }
@@ -31,27 +28,17 @@ public class ScoopSubsystem extends Subsystem {
         this.state = state;
     }
 
-//    public void nextState() {
-//        if (this.state == State.MIDDLE) this.state = State.TOP;
-//        else if (this.state == State.BOTTOM) this.state = State.MIDDLE;
-//    }
-//
-//    public void previousState() {
-//        if (this.state == State.TOP) this.state = State.MIDDLE;
-//        else if (this.state == State.MIDDLE) this.state = State.BOTTOM;
-//    }
-
     @Override
     public void periodic(Telemetry telemetry) {
         switch (state) {
             case TOP:
-                scoop.setPosition(Constants.kScoopTop);
+                scoop.setPosition(Constants.Scoop.kTop);
                 break;
             case MIDDLE:
-                scoop.setPosition(Constants.kScoopMiddle);
+                scoop.setPosition(Constants.Scoop.kMiddle);
                 break;
             case BOTTOM:
-                scoop.setPosition(Constants.kScoopBottom);
+                scoop.setPosition(Constants.Scoop.kBottom);
                 break;
         }
     }

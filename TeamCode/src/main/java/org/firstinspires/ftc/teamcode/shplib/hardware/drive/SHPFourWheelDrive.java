@@ -11,16 +11,16 @@ public class SHPFourWheelDrive {
     public final SHPMotor[] motors;
 
     public SHPFourWheelDrive(HardwareMap hardwareMap, String[] deviceNames) {
+        // 0 -> left front
+        // 1 -> left rear
+        // 2 -> right front
+        // 3 -> right rear
         motors = new SHPMotor[4];
         for (int i = 0; i < motors.length; i++) {
             motors[i] = new SHPMotor(hardwareMap, deviceNames[i]);
         }
         motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
-//        leftFront = new SHPMotor(hardwareMap, "leftFront");
-//        leftBack = new SHPMotor(hardwareMap, "leftRear");
-//        rightFront = new SHPMotor(hardwareMap, "rightFront");
-//        rightBack = new SHPMotor(hardwareMap, "rightRear");
     }
 
     public void enablePositionPID(double kP) {

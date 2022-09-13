@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.shplib.controllers;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
+
 public class PIDController {
     public double kP, kI, kD = 0;
 
@@ -9,10 +11,10 @@ public class PIDController {
     private double integralSum = 0;
     private double previousError = 0;
 
+    private double previousTime = 0;
+
     private double error = 0;
     private double errorTolerance = 1;
-
-    private ElapsedTime timer;
 
     public PIDController(double kP) {
         this.kP = kP;
@@ -22,7 +24,6 @@ public class PIDController {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
-        timer = new ElapsedTime();
     }
 
     private void setPeriod(double period) {
@@ -38,18 +39,15 @@ public class PIDController {
     }
 
     public double calculate(double measurement, double setpoint) {
-        if (timer != null) {
-            setPeriod(timer.seconds());
-            timer.reset();
-        }
-
         error = setpoint - measurement;
 
         // Proportional
         double output = kP * error;
 
-
         if (period > 0) {
+            setPeriod(Clock.elapsed(previousTime));
+            previousTime = Clock.seconds();
+
             // + Integral
             if (kI > 0) {
                 integralSum = integralSum + (error * period);

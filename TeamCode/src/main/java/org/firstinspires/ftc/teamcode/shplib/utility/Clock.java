@@ -9,12 +9,16 @@ public final class Clock {
         timer = new ElapsedTime();
     }
 
-    public static double seconds() {
+    public static double now() {
         return timer.seconds();
     }
 
     public static boolean hasElapsed(double startTime, double seconds) {
-        return seconds() - startTime >= seconds;
+        return elapsed(startTime) >= seconds;
+    }
+
+    public static double elapsed(double startTime) {
+        return now() - startTime;
     }
 
     public static void reset() {

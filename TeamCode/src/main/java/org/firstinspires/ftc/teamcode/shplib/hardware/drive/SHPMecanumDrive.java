@@ -29,6 +29,4 @@ public class SHPMecanumDrive extends SHPFourWheelDrive {
 
         setAll(powers);
     }
-
-
 }

@@ -6,29 +6,31 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class TemplateSubsystem extends Subsystem {
-    // Declare devices here
-    // e.g. private final SHPMotor motor;
+    // Declare devices
+    // Example:
+    // private final SHPMotor motor;
 
     public enum State {
-        DISABLED,
-        // Add states here
+        // Define states
+        // Example:
+        // ENABLED, DISABLED
     }
 
     private State state;
 
     public TemplateSubsystem(HardwareMap hardwareMap) {
-        // Initialize devices here
-        // e.g. motor = new SHPMotor(hardwareMap, "motor");
+        // Initialize devices
+        // Example:
+        // motor = new SHPMotor(hardwareMap, "motor");
 
-        state = State.DISABLED;
+        // Set initial state
+        // Example:
+        // state = State.TOP;
     }
 
-    // Add control methods here
-    // e.g. public void setPower(double power) { motor.setPower(power); }
-
-    public String getState() {
-        return state.toString();
-    }
+    // Add control methods
+    // Example:
+    // private void setPower(double power) { motor.setPower(power); }
 
     public void setState(State state) {
         this.state = state;
@@ -36,14 +38,27 @@ public class TemplateSubsystem extends Subsystem {
 
     @Override
     public void periodic(Telemetry telemetry) {
-        // Add any logging here
-        // e.g. telemetry.addData("Motor Encoder: ", motor.getCurrentPosition());
+        // Add logging if needed
+        // Example:
+        // telemetry.addData("Motor Encoder: ", motor.getCurrentPosition());
 
-        switch (state) {
-            case DISABLED:
-                // Handle disabled state
-                // e.g. motor.setPower(0.0);
-                break;
-        }
+        // Handle states
+        // Example:
+//        switch (state) {
+//            case ENABLED:
+//                setPower(1.0);
+//                break;
+//            case DISABLED:
+//                setPower(0.0);
+//                break;
+//        }
+
+        // OR
+
+//        if (state == State.ENABLED) {
+//            setPower(1.0);
+//        } else if (state == State.DISABLED) {
+//            setPower(0.0);
+//        }
     }
 }

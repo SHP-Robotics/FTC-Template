@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
@@ -16,32 +13,35 @@ import org.firstinspires.ftc.teamcode.subsystems.ScoopSubsystem;
  * Template created by Ayaan Govil on 8/21/2021.
  *
  * FTC Java Documentation: http://ftctechnh.github.io/ftc_app/doc/javadoc/index.html
+ *
+ * Helpful Shortcuts:
+ * - Ctrl/Command + / = Comment/Uncomment line (can highlight multiple lines)
+ * - Ctrl/Command + B = Go to declaration
+ * - Ctrl/Command + Alt/Option + L = Auto format code
  */
 
-// previous gradle: 4.0.1
+// Previous gradle: 4.0.1
 
 public class BaseRobot extends OpMode {
+    // Declare subsystems and devices
     public DriveSubsystem drive;
     public ArmSubsystem arm;
     public ScoopSubsystem scoop;
 
     public SHPMotor intake;
 
-    private final ElapsedTime timer;
+    public double previousTime = 0;
 
-    public BaseRobot() {
-        timer = new ElapsedTime();
-    }
-
+    // Called when you press the init button
     @Override
     public void init() {
-        telemetry.clearAll();
+        // Starts universal clock - DO NOT DELETE!
+        Clock.start();
 
         // Assigns telemetry object for Subsystem.periodic - DO NOT DELETE!
         CommandScheduler.getInstance().setTelemetry(telemetry);
-        Clock.start();
 
-        // Instantiate your subsystems and devices
+        // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
         arm = new ArmSubsystem(hardwareMap);
         scoop = new ScoopSubsystem(hardwareMap);
@@ -49,22 +49,17 @@ public class BaseRobot extends OpMode {
         intake = new SHPMotor(hardwareMap, "intake");
     }
 
-    // this function runs when you hit the start button after the init button
+    // Called when you press the start button
     @Override
     public void start() {
-//        CommandScheduler.getInstance().addCommand(new MoveArm(arm).then(new Command().with(new Command())));
+
     }
 
-    // this function runs when you hit the stop button
-    @Override
-    public void stop() {
-        CommandScheduler.resetInstance();
-    }
-
+    // Called repeatedly while an OpMode is running
     @Override
     public void loop() {
-        telemetry.addData("Loop Time (ms): ", timer.milliseconds());
-        timer.reset();
+        telemetry.addData("Loop Time (ms): ", Clock.elapsed(previousTime) * 1000);
+        previousTime = Clock.now();
 
         // Handles all subsystem and command execution - DO NOT DELETE!
         try {
@@ -72,5 +67,12 @@ public class BaseRobot extends OpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    // Called when you press the stop button
+    @Override
+    public void stop() {
+        // Flushes any cached subsystems and commands - DO NOT DELETE!
+        CommandScheduler.resetInstance();
     }
 }
