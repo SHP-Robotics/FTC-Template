@@ -1,3 +1,2 @@
-include ':Visualizer'
 include ':FtcRobotController'
 include ':TeamCode'

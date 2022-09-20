@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers;
 
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 
 public class PIDController {
@@ -46,7 +44,7 @@ public class PIDController {
 
         if (period > 0) {
             setPeriod(Clock.elapsed(previousTime));
-            previousTime = Clock.seconds();
+            previousTime = Clock.now();
 
             // + Integral
             if (kI > 0) {

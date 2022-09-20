@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers;
 
 public class FFController {
-    public double kV, kA, kS  = 0;
+    public double kV, kA, kS = 0;
 
     public FFController(double kV) {
         this.kV = kV;
@@ -18,7 +18,11 @@ public class FFController {
         this.kS = kS;
     }
 
-    public double calculate(double setpoint) {
-        return kV * setpoint + kA * Math.pow(setpoint, 2) + kS;
+    public double calculate(double velocity) {
+        return calculate(velocity, 0);
+    }
+
+    public double calculate(double velocity, double acceleration) {
+        return kV * velocity + kA * acceleration + kS * Math.signum(velocity);
     }
 }

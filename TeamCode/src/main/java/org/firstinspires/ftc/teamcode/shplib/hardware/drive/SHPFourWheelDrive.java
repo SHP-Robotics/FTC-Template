@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.shplib.hardware.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
@@ -35,26 +34,26 @@ public class SHPFourWheelDrive {
         }
     }
 
-    public void enableVelocityPID(double kP, double maxVelocity, AngleUnit unit) {
+    public void enableVelocityPID(double kP) {
         for (SHPMotor motor : motors) {
-            motor.enableVelocityPID(kP, maxVelocity, unit);
+            motor.enableVelocityPID(kP);
         }
     }
 
-    public void enableVelocityPID(double kP, double kI, double kD, double maxVelocity, AngleUnit unit) {
+    public void enableVelocityPID(double kP, double kI, double kD) {
         for (SHPMotor motor : motors) {
-            motor.enableVelocityPID(kP, kI, kD, maxVelocity, unit);
+            motor.enableVelocityPID(kP, kI, kD);
         }
     }
 
     public void setAll(double[] powers) {
         for (int i = 0; i < motors.length; i++) {
-            set(i, powers[i]);
+            setPower(i, powers[i]);
         }
     }
 
-    public void set(int index, double power) {
-        motors[index].set(Range.clip(power, -1.0, 1.0));
+    public void setPower(int index, double power) {
+        motors[index].setPower(power);
     }
 
     public void reverseAll() {

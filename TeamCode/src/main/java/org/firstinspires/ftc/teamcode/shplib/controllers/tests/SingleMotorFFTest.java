@@ -1,24 +1,24 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers.tests;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.roadrunner.util.RegressionUtil;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
-import org.firstinspires.ftc.teamcode.shplib.utility.LinearRegression;
+import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 import java.util.ArrayList;
 
-@Autonomous
+@Config
+@Autonomous(group = "ff")
 public class SingleMotorFFTest extends LinearOpMode {
 
-    final String MOTOR_NAME = "motor";
-    final double LIMIT_TICKS = 1000;
-    final AngleUnit ANGLE_UNIT = null;
-
-    final double VOLTAGE_RAMP = 0.25; // V/s
+    public static String MOTOR_NAME = "motor";
+    public static double LIMIT_TICKS = 1000;
+    public static double VOLTAGE_RAMP = 0.25; // V/s
 
     @Override
     public void runOpMode() {
@@ -30,20 +30,24 @@ public class SingleMotorFFTest extends LinearOpMode {
 //        ArrayList<Double> velocities = new ArrayList<>();
         ArrayList<Double> times = new ArrayList<>();
 
-        telemetry.addData(">", "Press start to begin the test.");
+        telemetry.addLine("Press start to begin the test.");
 
         waitForStart();
 
         telemetry.clearAll();
-        timer.reset();
-        motor.resetEncoder();
+        telemetry.addLine("Press stop to end the test.");
+        telemetry.addLine("Running test...");
+        telemetry.update();
 
-        while (opModeIsActive() && motor.getPosition() < LIMIT_TICKS) {
+        motor.resetEncoder();
+        timer.reset();
+
+        while (opModeIsActive() && motor.getPosition(MotorUnit.TICKS) < LIMIT_TICKS) {
             double seconds = timer.seconds();
-            double power = seconds * VOLTAGE_RAMP;
+            double power = seconds * VOLTAGE_RAMP / Constants.kNominalVoltage;
 
             times.add(timer.seconds());
-            positions.add((double) motor.getPosition());
+            positions.add((double) motor.getPosition(MotorUnit.TICKS));
             powers.add(power);
 //            double velocity = ANGLE_UNIT == null ? motor.getVelocityTicks() : motor.getVelocity(ANGLE_UNIT);
 //            telemetry.addData("velocity: ", velocity);
@@ -52,10 +56,15 @@ public class SingleMotorFFTest extends LinearOpMode {
         }
         motor.setPower(0);
 
+        telemetry.clearAll();
+
         RegressionUtil.RampResult result = RegressionUtil.fitRampData(times, positions, powers, true, null);
         telemetry.addData("kV: ", result.kV);
         telemetry.addData("kS: ", result.kStatic);
         telemetry.addData("R^2 (Accuracy): ", result.rSquare);
+        telemetry.update();
+
+        while (!isStopRequested() && opModeIsActive()) idle();
 
 //        LinearRegression graph = new LinearRegression(times.stream().mapToDouble(d -> d).toArray(), velocities.stream().mapToDouble(d -> d).toArray());
 //        telemetry.addData("kV: ", graph.slope());

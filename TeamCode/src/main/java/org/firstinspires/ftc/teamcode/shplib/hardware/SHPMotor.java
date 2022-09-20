@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.shplib.hardware;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.roadrunner.profile.MotionProfile;
+import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
+import com.acmerobotics.roadrunner.profile.MotionState;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -15,28 +18,40 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
 import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.controllers.VelocityPID;
+import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class SHPMotor {
     private final DcMotorEx motor;
     private VoltageSensor voltageSensor;
 
+    private final MotorUnit unit;
+    private double ticksPerRotation = 384.5; // default for gobilda 5202 @ 435 rpm
     private PositionPID positionPID;
     private VelocityPID velocityPID;
-    private AngleUnit unit;
+    private FFController ff;
 
-    private double maxVelocity = 0;
+    private boolean profilingEnabled = false;
+    private double maxVelocity;
+    private double maxAcceleration;
+    private MotionProfile profile;
 
     public SHPMotor(@NonNull HardwareMap hardwareMap, String deviceName) {
-        motor = hardwareMap.get(DcMotorEx.class, deviceName);
-        enableVoltageCompensation(hardwareMap);
-        configure();
-    }
-
-    private void configure() {
+        this.motor = hardwareMap.get(DcMotorEx.class, deviceName);
+        this.unit = MotorUnit.TICKS;
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        enableVoltageCompensation(hardwareMap);
+    }
+
+    public SHPMotor(@NonNull HardwareMap hardwareMap, String deviceName, MotorUnit unit) {
+        this.motor = hardwareMap.get(DcMotorEx.class, deviceName);
+        this.unit = unit;
+        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        enableVoltageCompensation(hardwareMap);
     }
 
     public void enableVoltageCompensation(@NonNull HardwareMap hardwareMap) {
@@ -47,12 +62,16 @@ public class SHPMotor {
         voltageSensor = null;
     }
 
+    public void setTicksPerRotation(double ticksPerRotation) {
+        this.ticksPerRotation = ticksPerRotation;
+    }
+
     public void enablePositionPID(double kP) {
-        positionPID = new PositionPID(kP, getPosition());
+        positionPID = new PositionPID(kP, getPosition(unit));
     }
 
     public void enablePositionPID(double kP, double kI, double kD) {
-        positionPID = new PositionPID(kP, kI, kD, getPosition());
+        positionPID = new PositionPID(kP, kI, kD, getPosition(unit));
     }
 
     public void disablePositionPID() {
@@ -69,15 +88,11 @@ public class SHPMotor {
         return positionPID.atSetpoint();
     }
 
-    public void enableVelocityPID(double kP, double maxVelocity, AngleUnit unit) {
-        setMaxVelocity(maxVelocity);
-        setUnit(unit);
+    public void enableVelocityPID(double kP) {
         velocityPID = new VelocityPID(kP, getVelocity(unit));
     }
 
-    public void enableVelocityPID(double kP, double kI, double kD, double maxVelocity, AngleUnit unit) {
-        setMaxVelocity(maxVelocity);
-        setUnit(unit);
+    public void enableVelocityPID(double kP, double kI, double kD) {
         velocityPID = new VelocityPID(kP, kI, kD, getVelocity(unit));
     }
 
@@ -95,16 +110,17 @@ public class SHPMotor {
         return velocityPID.atSetpoint();
     }
 
-    public void set(double power) {
-        if (velocityPID != null && maxVelocity > 0) {
-            setVelocity(power * maxVelocity);
-        } else setPower(power);
+    public void enableFF(FFController ff) {
+        this.ff = ff;
     }
 
-    public void setMaxVelocity(double maxVelocity) {
-        this.maxVelocity = maxVelocity;
+    public void disableFF() {
+        ff = null;
     }
 
+    /**
+     * @param power -1.0 to 1.0
+     */
     public void setPower(double power) {
         if (voltageSensor != null)
             power *= (Constants.kNominalVoltage / voltageSensor.getVoltage());
@@ -117,12 +133,75 @@ public class SHPMotor {
         return motor.getPower();
     }
 
-    public void setUnit(AngleUnit unit) {
-        this.unit = unit;
+    public double setVelocity(double velocity) {
+        double power = 0.0;
+        if (velocityPID != null) {
+            velocityPID.setCurrentVelocity(getVelocity(unit));
+            power += velocityPID.calculate(velocity);
+        }
+        if (ff != null) power += ff.calculate(velocity);
+        setPower(power);
+        return power;
     }
 
-    public AngleUnit getUnit() {
-        return unit;
+    public double getVelocity(MotorUnit unit) {
+        if (unit == MotorUnit.DEGREES)
+            return motor.getVelocity(AngleUnit.DEGREES);
+        else if (unit == MotorUnit.RADIANS)
+            return motor.getVelocity(AngleUnit.RADIANS);
+        else if (unit == MotorUnit.ROTATIONS)
+            return motor.getVelocity(AngleUnit.DEGREES) / 360.0;
+        else
+            return motor.getVelocity();
+    }
+
+    public double setPosition(double position) {
+        if (positionPID == null) return 0.0;
+        positionPID.setCurrentPosition(getPosition(unit));
+        double power = positionPID.calculate(position);
+        setPower(power);
+        return power;
+    }
+
+    public double getPosition(MotorUnit unit) {
+        if (unit == MotorUnit.DEGREES)
+            return motor.getCurrentPosition() / ticksPerRotation * 360;
+        else if (unit == MotorUnit.RADIANS)
+            return Math.toRadians(motor.getCurrentPosition() / ticksPerRotation * 360);
+        else if (unit == MotorUnit.ROTATIONS)
+            return motor.getCurrentPosition() / ticksPerRotation;
+        else
+            return motor.getCurrentPosition();
+    }
+
+    public void enableProfiling(double maxVelocity) {
+        enableProfiling(maxVelocity, maxVelocity);
+    }
+
+    public void enableProfiling(double maxVelocity, double maxAcceleration) {
+        profilingEnabled = true;
+        this.maxVelocity = maxVelocity;
+        this.maxAcceleration = maxAcceleration;
+    }
+
+    public void disableProfiling() {
+        profilingEnabled = false;
+    }
+
+    public void profileTo(double position) {
+        if (!profilingEnabled) return;
+        profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                new MotionState(getPosition(unit), 0, 0),
+                new MotionState(position, 0, 0),
+                maxVelocity,
+                maxAcceleration
+        );
+    }
+
+    public double followProfile(double seconds) {
+        if (!profilingEnabled || profile == null) return 0.0;
+        MotionState state = profile.get(seconds);
+        return setVelocity(state.getV());
     }
 
     public void setDirection(DcMotorEx.Direction direction) {
@@ -147,22 +226,6 @@ public class SHPMotor {
 
     public boolean isMotorDisabled() {
         return !motor.isMotorEnabled();
-    }
-
-    public double setVelocity(double velocity) {
-        if (velocityPID == null) return 0.0;
-        velocityPID.setCurrentVelocity(getVelocity(unit));
-        double power = velocityPID.calculate(velocity);
-        setPower(power);
-        return power;
-    }
-
-    public double getVelocityTicks() {
-        return motor.getVelocity();
-    }
-
-    public double getVelocity(AngleUnit unit) {
-        return motor.getVelocity(unit);
     }
 
     public double getCurrent(CurrentUnit unit) {
@@ -207,18 +270,6 @@ public class SHPMotor {
 
     public boolean isBusy() {
         return motor.isBusy();
-    }
-
-    public double setPosition(double position) {
-        if (positionPID == null) return 0.0;
-        positionPID.setCurrentPosition(getPosition());
-        double power = positionPID.calculate(position);
-        setPower(power);
-        return power;
-    }
-
-    public int getPosition() {
-        return motor.getCurrentPosition();
     }
 
     public void setMode(DcMotor.RunMode mode) {
