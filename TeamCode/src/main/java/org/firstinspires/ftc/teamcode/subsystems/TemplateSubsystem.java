@@ -25,16 +25,16 @@ public class TemplateSubsystem extends Subsystem {
 
         // Set initial state
         // Example:
-        // state = State.TOP;
+        // setState(State.TOP);
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     // Add control methods
     // Example:
     // private void setPower(double power) { motor.setPower(power); }
-
-    public void setState(State state) {
-        this.state = state;
-    }
 
     @Override
     public void periodic(Telemetry telemetry) {

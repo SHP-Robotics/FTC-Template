@@ -17,6 +17,10 @@ public final class Constants {
         };
     }
 
+    public static final class Vision {
+        public static final double kTagsizeMeters = 0.0475;
+    }
+
     public static final class Arm {
         public static final String kSlideName = "slide";
         public static final String kActuatorName = "actuator";

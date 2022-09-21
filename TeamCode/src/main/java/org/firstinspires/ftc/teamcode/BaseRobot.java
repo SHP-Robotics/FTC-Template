@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
@@ -8,12 +10,13 @@ import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ScoopSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
- *
+ * <p>
  * FTC Java Documentation: http://ftctechnh.github.io/ftc_app/doc/javadoc/index.html
- *
+ * <p>
  * Helpful Shortcuts:
  * - Ctrl/Command + / = Comment/Uncomment line (can highlight multiple lines)
  * - Ctrl/Command + B = Go to declaration
@@ -25,10 +28,13 @@ import org.firstinspires.ftc.teamcode.subsystems.ScoopSubsystem;
 public class BaseRobot extends OpMode {
     // Declare subsystems and devices
     public DriveSubsystem drive;
+    public VisionSubsystem vision;
     public ArmSubsystem arm;
     public ScoopSubsystem scoop;
 
     public SHPMotor intake;
+
+    public CRServo claw;
 
     public double previousTime = 0;
 
@@ -42,11 +48,13 @@ public class BaseRobot extends OpMode {
         CommandScheduler.getInstance().setTelemetry(telemetry);
 
         // Initialize your subsystems and devices
-        drive = new DriveSubsystem(hardwareMap);
-        arm = new ArmSubsystem(hardwareMap);
-        scoop = new ScoopSubsystem(hardwareMap);
+//        drive = new DriveSubsystem(hardwareMap);
+        vision = new VisionSubsystem(hardwareMap);
+//        arm = new ArmSubsystem(hardwareMap);
+//        scoop = new ScoopSubsystem(hardwareMap);
+//        intake = new SHPMotor(hardwareMap, "intake");
 
-        intake = new SHPMotor(hardwareMap, "intake");
+        claw = hardwareMap.get(CRServo.class, "claw");
     }
 
     // Called when you press the start button
