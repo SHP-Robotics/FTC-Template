@@ -16,7 +16,15 @@ public class SHPTankDrive extends SHPFourWheelDrive {
                 rightPower
         };
 
-        setAll(powers);
+        if (maxVelocity > 0) setAllVelocities(
+                new double[]{
+                        powers[0] * maxVelocity,
+                        powers[1] * maxVelocity,
+                        powers[2] * maxVelocity,
+                        powers[3] * maxVelocity,
+                }
+        );
+        else setAllPowers(powers);
     }
 
     public void arcade(double straight, double turn) {
@@ -27,6 +35,14 @@ public class SHPTankDrive extends SHPFourWheelDrive {
                 straight - turn
         };
 
-        setAll(powers);
+        if (maxVelocity > 0) setAllVelocities(
+                new double[]{
+                        powers[0] * maxVelocity,
+                        powers[1] * maxVelocity,
+                        powers[2] * maxVelocity,
+                        powers[3] * maxVelocity,
+                }
+        );
+        else setAllPowers(powers);
     }
 }

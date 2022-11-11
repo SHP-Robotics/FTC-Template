@@ -10,13 +10,21 @@ public class SHPMecanumDrive extends SHPFourWheelDrive {
 
     public void mecanum(double leftY, double leftX, double rightX) {
         double[] powers = {
-                leftY - leftX + rightX,
-                leftY + leftX + rightX,
-                leftY + leftX - rightX,
                 leftY - leftX - rightX,
+                leftY + leftX - rightX,
+                leftY + leftX + rightX,
+                leftY - leftX + rightX,
         };
 
-        setAll(powers);
+        if (maxVelocity > 0) setAllVelocities(
+                new double[]{
+                        powers[0] * maxVelocity,
+                        powers[1] * maxVelocity,
+                        powers[2] * maxVelocity,
+                        powers[3] * maxVelocity,
+                }
+        );
+        else setAllPowers(powers);
     }
 
     public void tankanum(double leftY, double rightY, double rightX) {
@@ -27,6 +35,14 @@ public class SHPMecanumDrive extends SHPFourWheelDrive {
                 rightY - rightX
         };
 
-        setAll(powers);
+        if (maxVelocity > 0) setAllVelocities(
+                new double[]{
+                        powers[0] * maxVelocity,
+                        powers[1] * maxVelocity,
+                        powers[2] * maxVelocity,
+                        powers[3] * maxVelocity,
+                }
+        );
+        else setAllPowers(powers);
     }
 }

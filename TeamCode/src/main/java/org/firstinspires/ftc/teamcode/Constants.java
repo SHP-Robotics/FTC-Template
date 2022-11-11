@@ -22,23 +22,21 @@ public final class Constants {
     }
 
     public static final class Arm {
-        public static final String kSlideName = "slide";
-        public static final String kActuatorName = "actuator";
+        public static final String kClawName = "claw";
+        public static final double kClawOpen = 0.2;
+        public static final double kClawClosed = 0.5;
 
-        public static final double kSlideP = 25;
-        public static final double kSlideTolerance = 0.2;
-        public static final double kSlideMaxVelocity = 1;
+        public static final String kLeftSlideName = "leftSlide";
+        public static final String kRightSlideName = "rightSlide";
 
-        public static final double kActuatorP = 5;
-        public static final double kActuatorTolerance = 50;
 
-        public static final double kSlideTop = 10;
-        public static final double kSlideMiddle = 5;
-        public static final double kSlideBottom = 0;
+        public static final double kSlideP = 0.17;
+        public static final double kSlideD = 0;//kSlideP * 10;//10;
+        public static final double kSlideTolerance = 50;
 
-        public static final double kActuatorTop = 2500;
-        public static final double kActuatorMiddle = 1000;
-        public static final double kActuatorBottom = 10;
+        public static final double kSlideS = 0.035; // static friction
+        public static final double kSlideG = 0.07; // gravity
+        public static final double kSlideV = 0;
     }
 
     public static final class Scoop {

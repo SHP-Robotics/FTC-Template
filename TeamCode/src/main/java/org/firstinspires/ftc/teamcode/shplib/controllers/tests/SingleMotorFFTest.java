@@ -16,8 +16,8 @@ import java.util.ArrayList;
 @Autonomous(group = "ff")
 public class SingleMotorFFTest extends LinearOpMode {
 
-    public static String MOTOR_NAME = "motor";
-    public static double LIMIT_TICKS = 1000;
+    public static String MOTOR_NAME = "leftFront";
+    public static double LIMIT_TICKS = 10000;
     public static double VOLTAGE_RAMP = 0.25; // V/s
 
     @Override
@@ -31,12 +31,13 @@ public class SingleMotorFFTest extends LinearOpMode {
         ArrayList<Double> times = new ArrayList<>();
 
         telemetry.addLine("Press start to begin the test.");
+        telemetry.update();
 
         waitForStart();
 
         telemetry.clearAll();
-        telemetry.addLine("Press stop to end the test.");
         telemetry.addLine("Running test...");
+        telemetry.addLine("Press stop to end the test.");
         telemetry.update();
 
         motor.resetEncoder();

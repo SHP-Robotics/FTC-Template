@@ -1,102 +1,98 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.acmerobotics.roadrunner.profile.MotionProfile;
-import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
-import com.acmerobotics.roadrunner.profile.MotionState;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
+import org.firstinspires.ftc.teamcode.shplib.controllers.ElevatorFFController;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
-import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-
-// Use this class as a reference for creating new subsystems
 
 public class ArmSubsystem extends Subsystem {
-    public final SHPMotor slide;
-    public final SHPMotor actuator;
+    private final Servo claw;
+//    private final DistanceSensor poleSensor;
+    private final SHPMotor leftSlide;
+    private final SHPMotor rightSlide;
 
     public enum State {
-        TOP,
-        MIDDLE,
-        BOTTOM,
+        BOTTOM, HUB, LOW, MIDDLE, HIGH
     }
 
     private State state;
 
-    private double previousTime;
-
     public ArmSubsystem(HardwareMap hardwareMap) {
-        slide = new SHPMotor(hardwareMap, Constants.Arm.kSlideName, MotorUnit.ROTATIONS);
-        slide.enablePositionPID(Constants.Arm.kSlideP);
-        slide.setPositionErrorTolerance(Constants.Arm.kSlideTolerance);
-//        slide.enableVelocityPID(Constants.Arm.kSlideP);
-//        slide.enableProfiling(Constants.Arm.kSlideMaxVelocity);
+        claw = hardwareMap.get(Servo.class, Constants.Arm.kClawName);
 
+//        poleSensor = hardwareMap.get(DistanceSensor.class, "coneSensor");
 
-        actuator = new SHPMotor(hardwareMap, Constants.Arm.kActuatorName);
-        actuator.enablePositionPID(Constants.Arm.kActuatorP);
-        actuator.setPositionErrorTolerance(Constants.Arm.kActuatorTolerance);
+        leftSlide = new SHPMotor(hardwareMap, Constants.Arm.kLeftSlideName);
+        leftSlide.reverseDirection();
+        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftSlide.enablePositionPID(Constants.Arm.kSlideP, Constants.Arm.kSlideD);
+        leftSlide.setPositionErrorTolerance(Constants.Arm.kSlideTolerance);
+        leftSlide.enableFF(new ElevatorFFController(Constants.Arm.kSlideS, Constants.Arm.kSlideG));
 
-        previousTime = Clock.now();
+        rightSlide = new SHPMotor(hardwareMap, Constants.Arm.kRightSlideName);
+//        rightSlide.reverseDirection();
+        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightSlide.enablePositionPID(Constants.Arm.kSlideP, Constants.Arm.kSlideD);
+        rightSlide.setPositionErrorTolerance(Constants.Arm.kSlideTolerance);
+        rightSlide.enableFF(new ElevatorFFController(Constants.Arm.kSlideS, Constants.Arm.kSlideG));
+
         setState(State.BOTTOM);
     }
 
     public void setState(State state) {
         this.state = state;
-        previousTime = Clock.now();
-//        if (state == State.TOP) {
-//            slide.profileTo(Constants.Arm.kSlideTop);
-//        } else if (state == State.MIDDLE) {
-//            slide.profileTo(Constants.Arm.kSlideMiddle);
-//        } else if (state == State.BOTTOM) {
-//            slide.profileTo(Constants.Arm.kSlideBottom);
-//        }
     }
 
-    public void nextState() {
-        if (this.state == State.MIDDLE) setState(State.TOP);
-        else if (this.state == State.BOTTOM) setState(State.MIDDLE);
+    public void openClaw() {
+        if (isClawClosed()) claw.setPosition(Constants.Arm.kClawOpen);
     }
 
-    public void previousState() {
-        if (this.state == State.TOP) setState(State.MIDDLE);
-        else if (this.state == State.MIDDLE) setState(State.BOTTOM);
+    public void closeClaw() {
+        if (!isClawClosed()) claw.setPosition(Constants.Arm.kClawClosed);
     }
 
-    public boolean atSetpoint() {
-        return actuator.atPositionSetpoint();
+    public boolean isClawClosed() {
+        return claw.getPosition() == Constants.Arm.kClawClosed;
     }
 
-    public boolean atBottom() {
-        return this.state == State.BOTTOM;
-    }
+//    public boolean isOverPole() {
+//        return poleSensor.getDistance(DistanceUnit.INCH) <= 6.0;
+//    }
 
     @Override
     public void periodic(Telemetry telemetry) {
-        telemetry.addData("slide rotations: ", slide.getPosition(MotorUnit.ROTATIONS));
-        telemetry.addData("actuator enc: ", actuator.getPosition(MotorUnit.TICKS));
-        telemetry.addData("arm at setpoint: ", atSetpoint() ? "true" : "false");
-        telemetry.addData("time: ", Clock.elapsed(previousTime));
-//        telemetry.addData("profile output: ", slide.followProfile(Clock.elapsed(previousTime)));
+//        telemetry.addData("Slide State: ", state.toString());
+        telemetry.addData("Left Slide Position: ", leftSlide.getPosition(MotorUnit.TICKS));
+        telemetry.addData("Right Slide Position: ", rightSlide.getPosition(MotorUnit.TICKS));
+//        telemetry.addData("Pole Distance (in): ", poleSensor.getDistance(DistanceUnit.INCH));
 
         switch (state) {
-            case TOP:
-                slide.setPosition(Constants.Arm.kSlideTop);
-                actuator.setPosition(Constants.Arm.kActuatorTop);
-                telemetry.addData("state: ", "TOP");
+            case BOTTOM:
+//                telemetry.addData("Power: ", slide.setPosition(10.0));
+                leftSlide.setPosition(10.0);
+                rightSlide.setPosition(10.0);
+                break;
+            case HUB:
+                break;
+            case LOW:
+                leftSlide.setPosition(1000.0);
+                rightSlide.setPosition(1000.0);
                 break;
             case MIDDLE:
-                slide.setPosition(Constants.Arm.kSlideMiddle);
-                actuator.setPosition(Constants.Arm.kActuatorMiddle);
-                telemetry.addData("state: ", "MIDDLE");
+                leftSlide.setPosition(2000.0);
+                rightSlide.setPosition(2000.0);
                 break;
-            case BOTTOM:
-                slide.setPosition(Constants.Arm.kSlideBottom);
-                actuator.setPosition(Constants.Arm.kActuatorBottom);
-                telemetry.addData("state: ", "BOTTOM");
+            case HIGH:
+                leftSlide.setPosition(4000.0);
+                rightSlide.setPosition(4000.0);
                 break;
         }
     }

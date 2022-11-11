@@ -40,7 +40,7 @@ public class TemplateSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
         // Add logging if needed
         // Example:
-        // telemetry.addData("Motor Encoder: ", motor.getCurrentPosition());
+        // telemetry.addData("Motor Encoder: ", motor.getPosition(MotorUnit.TICKS));
 
         // Handle states
         // Example:
