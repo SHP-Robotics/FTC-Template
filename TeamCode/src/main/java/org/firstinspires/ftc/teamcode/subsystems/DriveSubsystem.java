@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.Drive.*;
+
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -17,9 +20,11 @@ public class DriveSubsystem extends Subsystem {
     private final SHPMecanumDrive drive;
     private final SHPIMU imu;
 
+    private double bias = 1.0; // will always be between 0.0 and 1.0
+
     public DriveSubsystem(HardwareMap hardwareMap) {
-//        rr = new RRMecanumDrive(hardwareMap, Constants.Drive.kMotorNames);
-        drive = new SHPMecanumDrive(hardwareMap, Constants.Drive.kMotorNames);
+//        rr = new RRMecanumDrive(hardwareMap, kMotorNames);
+        drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
 
         // Change AxesOrder and AxesSigns according to your hub orientation
         // Omit Axes arguments for standard orientation
@@ -34,7 +39,11 @@ public class DriveSubsystem extends Subsystem {
 //        ).rotated(-imu.getYaw());
 
 //        drive.mecanum(vector.getX(), vector.getY(), rightX); // field oriented
-        drive.mecanum(leftY, leftX, rightX); // robot oriented
+        drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
+    }
+
+    public void setDriveBias(double driveBias) {
+        bias = Range.clip(driveBias, kMinimumBias, 1.0);
     }
 
 //    public void enablePositionPID() {
@@ -58,11 +67,10 @@ public class DriveSubsystem extends Subsystem {
 
     @Override
     public void periodic(Telemetry telemetry) {
-//        telemetry.addData();
-        telemetry.addData("Bot Direction: ", Math.toDegrees(imu.getYaw()));
-//        for (int i = 0; i < 4; i++) {
-//            telemetry.addData("Motor " + i + " Position: ", drive.getWheelPositions(MotorUnit.TICKS)[i]);
-//        }
+//        telemetry.addData("Bot Direction: ", Math.toDegrees(imu.getYaw()));
+        for (int i = 0; i < 4; i++) {
+            telemetry.addData("Motor " + i + " Position: ", drive.getWheelPositions(MotorUnit.TICKS)[i]);
+        }
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
     }
 }

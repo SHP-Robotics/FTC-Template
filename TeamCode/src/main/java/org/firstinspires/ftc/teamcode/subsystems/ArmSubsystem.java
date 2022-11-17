@@ -1,13 +1,27 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawClosed;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawOpen;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kRightSlideName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideBottom;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideG;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHigh;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHub;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideLow;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMiddle;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideS;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideStackDistance;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideTolerance;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.controllers.ElevatorFFController;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
@@ -15,34 +29,36 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class ArmSubsystem extends Subsystem {
     private final Servo claw;
-//    private final DistanceSensor poleSensor;
+    //    private final DistanceSensor poleSensor;
     private final SHPMotor leftSlide;
     private final SHPMotor rightSlide;
 
+    private int stackIndex = 4;
+
     public enum State {
-        BOTTOM, HUB, LOW, MIDDLE, HIGH
+        BOTTOM, HUB, LOW, MIDDLE, HIGH, STACK
     }
 
     private State state;
 
     public ArmSubsystem(HardwareMap hardwareMap) {
-        claw = hardwareMap.get(Servo.class, Constants.Arm.kClawName);
+        claw = hardwareMap.get(Servo.class, kClawName);
 
 //        poleSensor = hardwareMap.get(DistanceSensor.class, "coneSensor");
 
-        leftSlide = new SHPMotor(hardwareMap, Constants.Arm.kLeftSlideName);
+        leftSlide = new SHPMotor(hardwareMap, kLeftSlideName);
         leftSlide.reverseDirection();
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftSlide.enablePositionPID(Constants.Arm.kSlideP, Constants.Arm.kSlideD);
-        leftSlide.setPositionErrorTolerance(Constants.Arm.kSlideTolerance);
-        leftSlide.enableFF(new ElevatorFFController(Constants.Arm.kSlideS, Constants.Arm.kSlideG));
+        leftSlide.enablePositionPID(kSlideP, kSlideD);
+        leftSlide.setPositionErrorTolerance(kSlideTolerance);
+        leftSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
 
-        rightSlide = new SHPMotor(hardwareMap, Constants.Arm.kRightSlideName);
+        rightSlide = new SHPMotor(hardwareMap, kRightSlideName);
 //        rightSlide.reverseDirection();
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightSlide.enablePositionPID(Constants.Arm.kSlideP, Constants.Arm.kSlideD);
-        rightSlide.setPositionErrorTolerance(Constants.Arm.kSlideTolerance);
-        rightSlide.enableFF(new ElevatorFFController(Constants.Arm.kSlideS, Constants.Arm.kSlideG));
+        rightSlide.enablePositionPID(kSlideP, kSlideD);
+        rightSlide.setPositionErrorTolerance(kSlideTolerance);
+        rightSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
 
         setState(State.BOTTOM);
     }
@@ -52,48 +68,71 @@ public class ArmSubsystem extends Subsystem {
     }
 
     public void openClaw() {
-        if (isClawClosed()) claw.setPosition(Constants.Arm.kClawOpen);
+        if (isClawClosed()) claw.setPosition(kClawOpen);
+        if (isAtStacks()) stackIndex++;
     }
 
     public void closeClaw() {
-        if (!isClawClosed()) claw.setPosition(Constants.Arm.kClawClosed);
+        if (!isClawClosed()) claw.setPosition(kClawClosed);
+        if (isAtStacks() && stackIndex > 0) stackIndex--;
     }
 
     public boolean isClawClosed() {
-        return claw.getPosition() == Constants.Arm.kClawClosed;
+        return claw.getPosition() == kClawClosed;
     }
 
 //    public boolean isOverPole() {
 //        return poleSensor.getDistance(DistanceUnit.INCH) <= 6.0;
 //    }
 
-    @Override
-    public void periodic(Telemetry telemetry) {
-//        telemetry.addData("Slide State: ", state.toString());
-        telemetry.addData("Left Slide Position: ", leftSlide.getPosition(MotorUnit.TICKS));
-        telemetry.addData("Right Slide Position: ", rightSlide.getPosition(MotorUnit.TICKS));
-//        telemetry.addData("Pole Distance (in): ", poleSensor.getDistance(DistanceUnit.INCH));
+    public boolean isAtStacks() {
+        return state == State.STACK;
+    }
 
+    public double getDriveBias() {
+        return Math.abs(getSlidePosition(MotorUnit.TICKS) / kSlideHigh - 1.0);
+    }
+
+    public double getSlidePosition(MotorUnit unit) {
+        return (leftSlide.getPosition(unit) + rightSlide.getPosition(unit)) / 2.0;
+    }
+
+    private double processState() {
         switch (state) {
             case BOTTOM:
 //                telemetry.addData("Power: ", slide.setPosition(10.0));
-                leftSlide.setPosition(10.0);
-                rightSlide.setPosition(10.0);
-                break;
+                leftSlide.setPosition(kSlideBottom);
+                return rightSlide.setPosition(kSlideBottom);
+//                break;
             case HUB:
-                break;
+                leftSlide.setPosition(kSlideHub);
+                return rightSlide.setPosition(kSlideHub);
             case LOW:
-                leftSlide.setPosition(1000.0);
-                rightSlide.setPosition(1000.0);
-                break;
+                leftSlide.setPosition(kSlideLow);
+                return rightSlide.setPosition(kSlideLow);
+//                break;
             case MIDDLE:
-                leftSlide.setPosition(2000.0);
-                rightSlide.setPosition(2000.0);
-                break;
+                leftSlide.setPosition(kSlideMiddle);
+                return rightSlide.setPosition(kSlideMiddle);
+//                break;
             case HIGH:
-                leftSlide.setPosition(4000.0);
-                rightSlide.setPosition(4000.0);
-                break;
+                leftSlide.setPosition(kSlideHigh);
+                return rightSlide.setPosition(kSlideHigh);
+//                break;
+            case STACK:
+                leftSlide.setPosition(stackIndex * kSlideStackDistance + kSlideBottom);
+                return rightSlide.setPosition(stackIndex * kSlideStackDistance + kSlideBottom);
         }
+        return 0.0;
+    }
+
+    @Override
+    public void periodic(Telemetry telemetry) {
+//        telemetry.addData("Slide State: ", state.toString());
+        telemetry.addData("Num Cones Stacked: ", stackIndex + 1);
+        telemetry.addData("Left Slide Position: ", leftSlide.getPosition(MotorUnit.TICKS));
+        telemetry.addData("Right Slide Position: ", rightSlide.getPosition(MotorUnit.TICKS));
+//        telemetry.addData("Pole Distance (in): ", poleSensor.getDistance(DistanceUnit.INCH));
+        telemetry.addData("Right Slide PID Output: ", processState());
     }
 }

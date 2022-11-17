@@ -31,10 +31,8 @@ public class BaseRobot extends OpMode {
     // Called when you press the init button
     @Override
     public void init() {
-        // Starts universal clock - DO NOT DELETE!
-        Clock.start();
-        // Assigns telemetry object for Subsystem.periodic - DO NOT DELETE!
-        CommandScheduler.getInstance().setTelemetry(telemetry);
+        // Configures universal clock and scheduler - DO NOT DELETE!
+        configure();
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
@@ -69,5 +67,12 @@ public class BaseRobot extends OpMode {
     public void stop() {
         // Flushes any cached subsystems and commands - DO NOT DELETE!
         CommandScheduler.resetInstance();
+    }
+
+    public void configure() {
+        // Starts universal clock - DO NOT DELETE!
+        Clock.start();
+        // Assigns telemetry object for Subsystem.periodic - DO NOT DELETE!
+        CommandScheduler.getInstance().setTelemetry(telemetry);
     }
 }

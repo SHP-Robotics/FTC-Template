@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
@@ -24,6 +25,12 @@ public class SHPFourWheelDrive {
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
+    public void enableFF(FFController ff) {
+        for (SHPMotor motor : motors) {
+            motor.enableFF(ff);
+        }
+    }
+
     public void enablePositionPID(double kP, double errorTolerance) {
         for (SHPMotor motor : motors) {
             motor.enablePositionPID(kP);
@@ -38,13 +45,13 @@ public class SHPFourWheelDrive {
         }
     }
 
-    public void setPosition(double position) {
+    public void setPositions(double position) {
         for (SHPMotor motor : motors) {
             motor.setPosition(position);
         }
     }
 
-    public void setPosition(double[] position) {
+    public void setPositions(double[] position) {
         for (int i = 0; i < motors.length; i++) {
             motors[i].setPosition(position[i]);
         }
@@ -70,6 +77,12 @@ public class SHPFourWheelDrive {
             motor.enableVelocityPID(kP, kI, kD);
         }
         this.maxVelocity = maxVelocity;
+    }
+
+    public void setAllPowers(double powers) {
+        for (int i = 0; i < motors.length; i++) {
+            setPower(i, powers);
+        }
     }
 
     public void setAllPowers(double[] powers) {

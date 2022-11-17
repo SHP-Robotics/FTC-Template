@@ -76,44 +76,43 @@ public class VisionSubsystem extends Subsystem {
 
     @Override
     public void periodic(Telemetry telemetry) {
-        if (state == State.ENABLED) {
-            // Calling getDetectionsUpdate() will only return an object if there was a new frame
-            // processed since the last time we called it. Otherwise, it will return null. This
-            // enables us to only run logic when there has been a new frame, as opposed to the
-            // getLatestDetections() method which will always return an object.
-            ArrayList<AprilTagDetection> detections = pipeline.getDetectionsUpdate();
+        if (state == State.DISABLED) return;
+        // Calling getDetectionsUpdate() will only return an object if there was a new frame
+        // processed since the last time we called it. Otherwise, it will return null. This
+        // enables us to only run logic when there has been a new frame, as opposed to the
+        // getLatestDetections() method which will always return an object.
+        ArrayList<AprilTagDetection> detections = pipeline.getDetectionsUpdate();
 
-            // If there's been a new frame...
-            if (detections != null) {
-                // If we don't see any tags
-                if (detections.size() == 0) {
-                    numFramesWithoutDetection++;
+        // If there's been a new frame...
+        if (detections != null) {
+            // If we don't see any tags
+            if (detections.size() == 0) {
+                numFramesWithoutDetection++;
 
-                    // If we haven't seen a tag for a few frames, lower the decimation
-                    // so we can hopefully pick one up if we're e.g. far back
-                    if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
-                        pipeline.setDecimation(DECIMATION_LOW);
-                    }
+                // If we haven't seen a tag for a few frames, lower the decimation
+                // so we can hopefully pick one up if we're e.g. far back
+                if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
+                    pipeline.setDecimation(DECIMATION_LOW);
                 }
-                // We do see tags!
-                else {
-                    numFramesWithoutDetection = 0;
+            }
+            // We do see tags!
+            else {
+                numFramesWithoutDetection = 0;
 
-                    // If the target is within 1 meter, turn on high decimation to
-                    // increase the frame rate
-                    if (detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
-                        pipeline.setDecimation(DECIMATION_HIGH);
-                    }
-
-                    for (AprilTagDetection detection : detections) {
-                        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
-                        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
-                        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
-                    }
-
-                    tags = detections;
+                // If the target is within 1 meter, turn on high decimation to
+                // increase the frame rate
+                if (detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
+                    pipeline.setDecimation(DECIMATION_HIGH);
                 }
+
+//                for (AprilTagDetection detection : detections) {
+//                    telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
+//                    telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
+//                    telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
+//                    telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+//                }
+
+                tags = detections;
             }
         }
     }

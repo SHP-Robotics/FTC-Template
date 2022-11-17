@@ -15,6 +15,7 @@ public final class Constants {
                 "rightFront",
                 "rightRear"
         };
+        public static final double kMinimumBias = 0.4;
     }
 
     public static final class Vision {
@@ -29,6 +30,12 @@ public final class Constants {
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
 
+        public static final double kSlideBottom = 10.0;
+        public static final double kSlideHub = 200.0;
+        public static final double kSlideLow = 1000.0;
+        public static final double kSlideMiddle = 2500.0;
+        public static final double kSlideHigh = 4000.0;
+        public static final double kSlideStackDistance = 150.0;
 
         public static final double kSlideP = 0.17;
         public static final double kSlideD = 0;//kSlideP * 10;//10;

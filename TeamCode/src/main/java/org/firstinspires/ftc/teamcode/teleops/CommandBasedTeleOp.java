@@ -4,8 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DropConeCommand;
+import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
+import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 
@@ -38,16 +40,32 @@ public class CommandBasedTeleOp extends BaseRobot {
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
 
+        drive.setDriveBias(arm.getDriveBias());
+
         new Trigger(gamepad1.a, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
             if (arm.isClawClosed()) arm.openClaw();
-            else arm.closeClaw();
+            else {
+                arm.closeClaw();
+                CommandScheduler.getInstance().scheduleCommand(
+                        new WaitCommand(0.5)
+                                .then(new RunCommand(() -> {
+                                    if (arm.isAtStacks()) arm.setState(ArmSubsystem.State.LOW);
+                                    else arm.setState(ArmSubsystem.State.HUB);
+                                }))
+                );
+
+            }
             debounce = Clock.now();
         }));
 
         new Trigger(gamepad1.b, new DropConeCommand(arm));
 
-        new Trigger(gamepad1.dpad_up || gamepad1.x, new RunCommand(() -> {
+        new Trigger(gamepad1.x, new RunCommand(() -> {
+            arm.setState(ArmSubsystem.State.STACK);
+        }));
+
+        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
             arm.setState(ArmSubsystem.State.HIGH);
         }));
 
@@ -62,27 +80,5 @@ public class CommandBasedTeleOp extends BaseRobot {
         new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
             arm.setState(ArmSubsystem.State.BOTTOM);
         }));
-
-//        new Trigger(gamepad1.dpad_up, new MoveArmCommand(arm, MoveArmCommand.Direction.UP));
-//        new Trigger(gamepad1.dpad_down, new MoveArmCommand(arm, MoveArmCommand.Direction.DOWN));
-//        new Trigger(gamepad1.b && !arm.atBottom(), new DumpCargoCommand(scoop));
-//
-//        // Dump cargo macro
-//        new Trigger(gamepad1.a,
-//                new RunCommand((() -> {
-//                    scoop.setState(ScoopSubsystem.State.MIDDLE);
-//                }), scoop)
-//                        .then(new MoveArmCommand(arm, MoveArmCommand.Direction.TOP))
-//                        .then(new DumpCargoCommand(scoop))
-//                        .then(new MoveArmCommand(arm, MoveArmCommand.Direction.MIDDLE))
-//                        .then(new MoveArmCommand(arm, MoveArmCommand.Direction.BOTTOM))
-//        );
-//
-//        intake.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
-//        if (gamepad1.a) {
-//            claw.setPower(0.5);
-//        } else if (gamepad1.b){
-//            claw.setPower(-0.5);
-//        } else claw.setPower(0.0);
     }
 }
