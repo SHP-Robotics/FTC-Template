@@ -44,13 +44,13 @@ public class CommandBasedTeleOp extends BaseRobot {
 
         new Trigger(gamepad1.a, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
-            if (arm.isClawClosed()) arm.openClaw();
+            if (arm.clawClosed()) arm.openClaw();
             else {
                 arm.closeClaw();
                 CommandScheduler.getInstance().scheduleCommand(
                         new WaitCommand(0.5)
                                 .then(new RunCommand(() -> {
-                                    if (arm.isAtStacks()) arm.setState(ArmSubsystem.State.LOW);
+                                    if (arm.atStacks()) arm.setState(ArmSubsystem.State.LOW);
                                     else arm.setState(ArmSubsystem.State.HUB);
                                 }))
                 );

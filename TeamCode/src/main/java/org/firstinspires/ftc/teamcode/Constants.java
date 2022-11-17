@@ -39,7 +39,7 @@ public final class Constants {
 
         public static final double kSlideP = 0.17;
         public static final double kSlideD = 0;//kSlideP * 10;//10;
-        public static final double kSlideTolerance = 50;
+        public static final double kSlideTolerance = 100;
 
         public static final double kSlideS = 0.035; // static friction
         public static final double kSlideG = 0.07; // gravity

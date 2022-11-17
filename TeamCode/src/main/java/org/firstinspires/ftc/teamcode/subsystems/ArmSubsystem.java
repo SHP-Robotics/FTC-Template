@@ -67,17 +67,21 @@ public class ArmSubsystem extends Subsystem {
         this.state = state;
     }
 
+    public double getDriveBias() {
+        return Math.abs(getSlidePosition(MotorUnit.TICKS) / kSlideHigh - 1.0);
+    }
+
     public void openClaw() {
-        if (isClawClosed()) claw.setPosition(kClawOpen);
-        if (isAtStacks()) stackIndex++;
+        if (clawClosed()) claw.setPosition(kClawOpen);
+        if (atStacks()) stackIndex++;
     }
 
     public void closeClaw() {
-        if (!isClawClosed()) claw.setPosition(kClawClosed);
-        if (isAtStacks() && stackIndex > 0) stackIndex--;
+        if (!clawClosed()) claw.setPosition(kClawClosed);
+        if (atStacks() && stackIndex > 0) stackIndex--;
     }
 
-    public boolean isClawClosed() {
+    public boolean clawClosed() {
         return claw.getPosition() == kClawClosed;
     }
 
@@ -85,12 +89,12 @@ public class ArmSubsystem extends Subsystem {
 //        return poleSensor.getDistance(DistanceUnit.INCH) <= 6.0;
 //    }
 
-    public boolean isAtStacks() {
+    public boolean atStacks() {
         return state == State.STACK;
     }
 
-    public double getDriveBias() {
-        return Math.abs(getSlidePosition(MotorUnit.TICKS) / kSlideHigh - 1.0);
+    public boolean atSetpoint() {
+        return leftSlide.atPositionSetpoint() && rightSlide.atPositionSetpoint();
     }
 
     public double getSlidePosition(MotorUnit unit) {

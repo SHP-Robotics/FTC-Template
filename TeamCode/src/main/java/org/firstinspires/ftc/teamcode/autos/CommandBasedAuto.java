@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.BaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DriveByCommand;
 import org.firstinspires.ftc.teamcode.commands.DropConeCommand;
+import org.firstinspires.ftc.teamcode.commands.RaiseToHighCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
@@ -38,10 +39,7 @@ public class CommandBasedAuto extends BaseRobot {
                         }))
                         .then(new WaitCommand(0.5))
                         .then(new DriveByCommand(autoDrive, 3000))
-                        .then(new RunCommand(() -> {
-                            arm.setState(ArmSubsystem.State.HIGH);
-                        }))
-                        .then(new WaitCommand(2))
+                        .then(new RaiseToHighCommand(arm))
                         .then(new DriveByCommand(autoDrive, 500))
                         .then(new DropConeCommand(arm))
 //                        .then(new DriveByCommand(autoDrive, 3000, 3000, -3000, -3000))
