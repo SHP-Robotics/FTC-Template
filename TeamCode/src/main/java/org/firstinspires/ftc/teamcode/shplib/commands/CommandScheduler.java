@@ -52,6 +52,11 @@ public final class CommandScheduler {
     public void run() throws InterruptedException {
         ArrayList<Subsystem> idleSubsystems = new ArrayList<>(subsystems);
 
+        // run subsystem periodic
+        for (Subsystem subsystem : subsystems) {
+            subsystem.periodic(telemetry);
+        }
+
         for (int i = 0; i < commands.size(); i++) {
             Command command = commands.get(i);
 
@@ -91,10 +96,6 @@ public final class CommandScheduler {
         for (Subsystem subsystem : idleSubsystems) {
             Command defaultCommand = subsystem.getDefaultCommand();
             if (defaultCommand != null) defaultCommand.execute();
-        }
-
-        for (Subsystem subsystem : subsystems) {
-            subsystem.periodic(telemetry);
         }
     }
 }
