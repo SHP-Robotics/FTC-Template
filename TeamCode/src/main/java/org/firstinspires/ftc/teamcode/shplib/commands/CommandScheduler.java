@@ -32,10 +32,13 @@ public final class CommandScheduler {
 
     public void scheduleCommand(Command command) {
         for (Command c : commands) {
+            if (c.getClass().equals(SequentialCommandGroup.class)) {
+                scheduleCommand(c.getNextCommands().get(0));
+                return;
+            }
             if (c.getClass().equals(command.getClass())
                     && !c.getClass().equals(RunCommand.class)
-                    && !c.getClass().equals(ParallelCommandGroup.class)
-                    && !c.getClass().equals(SequentialCommandGroup.class))
+                    && !c.getClass().equals(ParallelCommandGroup.class))
                 return;
         }
         command.init();
@@ -93,52 +96,5 @@ public final class CommandScheduler {
         for (Subsystem subsystem : subsystems) {
             subsystem.periodic(telemetry);
         }
-
-
-//        for (int i = 0; i < commands.size(); i++) {
-//            Command command = commands.get(i);
-//            command.execute();
-//            if (command.isFinished()) {
-//                command.end();
-//                commands.remove(i);
-//                i--;
-//            }
-//        }
-
-        // collapse subsystem current commands into array and then execute array, delete above
-        // essentially gather commands to execute on each loop, including default commands
-
-//        ArrayList<Command> commandsToRun = new ArrayList<>();
-//
-//        for (Subsystem subsystem : subsystems) {
-//            subsystem.periodic(telemetry);
-//
-//            Command command = subsystem.getCurrentCommand();
-//            // if current command is null, switch to default
-//            if (command == null) {
-//                command = subsystem.resetToDefault();
-//                // if default is also null, continue to next subsystem (no commands to run for subsystem)
-//                if (command == null) continue;
-//            }
-//
-//            // if the command is finished, execute it if it hasnt, and reset to default command and continue
-//            // doing this to avoid circular dependencies down the road
-//            if (command.isFinished() && !command.hasShutdown()) {
-//                command.execute();
-//                command.end();
-//                command.shutdown();
-//                subsystem.resetToDefault();
-//                continue;
-//            }
-//
-//            // if command hasnt been added yet, add it
-//            if (!commandsToRun.contains(command)) {
-//                commandsToRun.add(command);
-//            }
-//        }
-//
-//        for (Command command : commandsToRun) {
-//            command.execute();
-//        }
     }
 }
