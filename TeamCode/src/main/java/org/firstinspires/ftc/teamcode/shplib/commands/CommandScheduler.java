@@ -31,30 +31,23 @@ public final class CommandScheduler {
     }
 
     public void scheduleCommand(Command command) {
-        if (command.getClass().equals(SequentialCommandGroup.class)) {
-            scheduleCommand(command.getNextCommands().get(0));
+        // if scheduled command is a sequential command group, toss it away and begin the chain
+        if (command instanceof SequentialCommandGroup) {
+            ArrayList<Command> nextCommands = command.getNextCommands();
+            Command nextCommand = nextCommands.remove(0);
+            nextCommand.then(nextCommands);
+            scheduleCommand(nextCommand);
             return;
         }
-
+        // make sure that duplicate commands aren't scheduled
         for (Command c : commands) {
             if (c.getClass().equals(command.getClass())
-                    && !c.getClass().equals(ParallelCommandGroup.class))
+                    && !(c instanceof RunCommand)
+                    && !(c instanceof WaitCommand)
+                    && !(c instanceof ParallelCommandGroup))
                 return;
         }
-
         command.init();
-        if (command.isFinished()) {
-            command.execute();
-            command.end();
-            ArrayList<Command> nextCommands = command.getNextCommands();
-            if (nextCommands.size() > 0) {
-                Command nextCommand = nextCommands.remove(0);
-                nextCommand.then(nextCommands);
-                scheduleCommand(nextCommand);
-            }
-            return;
-        }
-
         commands.add(command);
         for (Command c : command.getWithCommands()) {
             scheduleCommand(c);
@@ -72,7 +65,6 @@ public final class CommandScheduler {
 
         for (int i = 0; i < commands.size(); i++) {
             Command command = commands.get(i);
-            command.execute();
 
             // check if command subsystems are idle
             Subsystem[] commandSubsystems = command.getSubsystems();
@@ -85,9 +77,13 @@ public final class CommandScheduler {
                 }
             }
             if (!canRun) continue;
+
+            // after ensuring command subsystems are idle, make them no longer idle
             for (Subsystem subsystem : commandSubsystems) {
                 idleSubsystems.remove(subsystem);
             }
+
+            command.execute();
 
             if (command.isFinished()) {
                 command.end();
