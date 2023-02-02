@@ -2,34 +2,33 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Drive.*;
 
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.roadrunner.util.AxesSigns;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
+import org.firstinspires.ftc.teamcode.shplib.controllers.GainSchedule;
+import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.drive.SHPMecanumDrive;
 import org.firstinspires.ftc.teamcode.shplib.hardware.sensors.SHPIMU;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class DriveSubsystem extends Subsystem {
-    //    private final RRMecanumDrive rr;
     private final SHPMecanumDrive drive;
-    private final SHPIMU imu;
+//    private final SHPIMU imu;
 
-    private double bias = 1.0; // will always be between 0.0 and 1.0
+    private double bias = 1.0; // will always be between kMinimumBias and 1.0
 
     public DriveSubsystem(HardwareMap hardwareMap) {
-//        rr = new RRMecanumDrive(hardwareMap, kMotorNames);
         drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
 
-        // Change AxesOrder and AxesSigns according to your hub orientation
-        // Omit Axes arguments for standard orientation
-        imu = new SHPIMU(hardwareMap, AxesOrder.ZYX, AxesSigns.PPN);
-//        imu = new SHPIMU(hardwareMap);
+        // Change logo direction and USB direction according to your hub orientation
+        // Reference pictures: https://ftc-docs.firstinspires.org/programming_resources/imu/imu.html#orthogonal-mounting
+//        imu = new SHPIMU(hardwareMap,
+//                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
     }
 
     public void mecanum(double leftY, double leftX, double rightX) {
@@ -46,9 +45,21 @@ public class DriveSubsystem extends Subsystem {
         bias = Range.clip(driveBias, kMinimumBias, 1.0);
     }
 
-//    public void enablePositionPID() {
-//        drive.enablePositionPID(Constants.Drive.kP, 0, Constants.Drive.kD, 50);
-//    }
+    public void enablePositionPID() {
+        drive.enablePositionPID(0.001, 0.0, 0.0);
+        drive.scheduleGains(
+                new GainSchedule(0.0005, 0.0, 0.0, 0.80),
+                new GainSchedule(0.0002, 0.0, 0.0, 0.40)
+//                new GainSchedule(0.0001, 0.0, 0.0, 0.10)
+
+//                new GainSchedule(0.00015, 0.0, 0.0, 0.20)
+        );
+        drive.enableFF(kFFs);
+    }
+
+    public void setInitialPositions() {
+        drive.setInitialPositions(MotorUnit.TICKS);
+    }
 //
 //    public void driveTo(boolean usingPID, double ticks) {
 //        if (usingPID) {
@@ -65,11 +76,15 @@ public class DriveSubsystem extends Subsystem {
 //        return drive.atPositionSetpoint();
 //    }
 
+    public void setPosition(double position) {
+        drive.setPositions(position);
+    }
+
     @Override
     public void periodic(Telemetry telemetry) {
 //        telemetry.addData("Bot Direction: ", Math.toDegrees(imu.getYaw()));
         for (int i = 0; i < 4; i++) {
-            telemetry.addData("Motor " + i + " Position: ", drive.getWheelPositions(MotorUnit.TICKS)[i]);
+            telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
         }
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
     }

@@ -5,12 +5,20 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
+import org.firstinspires.ftc.teamcode.shplib.controllers.GainSchedule;
+import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
+import org.firstinspires.ftc.teamcode.shplib.controllers.VelocityPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 public class SHPFourWheelDrive {
     final SHPMotor[] motors;
     double maxVelocity = 0;
+
+    PositionPID positionPID = null;
 
     public SHPFourWheelDrive(HardwareMap hardwareMap, String[] motorNames) {
         // 0 -> left front
@@ -25,33 +33,66 @@ public class SHPFourWheelDrive {
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void enableFF(FFController ff) {
+    public void setMaxOutput(double maxOutput) {
         for (SHPMotor motor : motors) {
-            motor.enableFF(ff);
+            motor.setMaxOutput(maxOutput);
         }
     }
 
-    public void enablePositionPID(double kP, double errorTolerance) {
+    public void enableFF(FFController[] ffs) {
+        for (int i = 0; i < motors.length; i++) {
+            motors[i].enableFF(ffs[i]);
+        }
+    }
+
+    public void enablePositionPID(double kP, double kI, double kD) {
         for (SHPMotor motor : motors) {
-            motor.enablePositionPID(kP);
+            motor.enablePositionPID(new PositionPID(kP, kI, kD));
+        }
+    }
+
+    public void scheduleGains(GainSchedule... schedules) {
+        for (SHPMotor motor : motors) {
+            motor.scheduleGains(schedules);
+        }
+    }
+
+    public void setInitialPositions(MotorUnit unit) {
+        for (SHPMotor motor : motors) {
+            motor.setInitialPosition(unit);
+        }
+    }
+
+    public void setPositionErrorTolerance(double errorTolerance) {
+        for (SHPMotor motor : motors) {
             motor.setPositionErrorTolerance(errorTolerance);
         }
     }
 
-    public void enablePositionPID(double kP, double kI, double kD, double errorTolerance) {
-        for (SHPMotor motor : motors) {
-            motor.enablePositionPID(kP, kI, kD);
-            motor.setPositionErrorTolerance(errorTolerance);
+    public void checkSchedules() {
+        Integer[] indices = new Integer[]{
+                motors[0].getScheduleIndex(),
+                motors[1].getScheduleIndex(),
+                motors[2].getScheduleIndex(),
+                motors[3].getScheduleIndex(),
+        };
+        Integer maxIndex = Collections.max(Arrays.asList(indices));
+        for (int i = 0; i < indices.length; i++) {
+            if (indices[i] < maxIndex) {
+                motors[i].setScheduleIndex(maxIndex);
+            }
         }
     }
 
     public void setPositions(double position) {
+        checkSchedules();
         for (SHPMotor motor : motors) {
             motor.setPosition(position);
         }
     }
 
     public void setPositions(double[] position) {
+        checkSchedules();
         for (int i = 0; i < motors.length; i++) {
             motors[i].setPosition(position[i]);
         }
@@ -65,16 +106,9 @@ public class SHPFourWheelDrive {
 
     }
 
-    public void enableVelocityPID(double kP, double maxVelocity) {
+    public void enableVelocityPID(VelocityPID velocityPID, double maxVelocity) {
         for (SHPMotor motor : motors) {
-            motor.enableVelocityPID(kP);
-        }
-        this.maxVelocity = maxVelocity;
-    }
-
-    public void enableVelocityPID(double kP, double kI, double kD, double maxVelocity) {
-        for (SHPMotor motor : motors) {
-            motor.enableVelocityPID(kP, kI, kD);
+            motor.enableVelocityPID(velocityPID);
         }
         this.maxVelocity = maxVelocity;
     }
@@ -117,7 +151,7 @@ public class SHPFourWheelDrive {
         }
     }
 
-    public double[] getWheelPowers() {
+    public double[] getPowers() {
         return new double[]{
                 motors[0].getPower(),
                 motors[1].getPower(),
@@ -126,7 +160,7 @@ public class SHPFourWheelDrive {
         };
     }
 
-    public double[] getWheelVelocities(MotorUnit unit) {
+    public double[] getVelocities(MotorUnit unit) {
         return new double[]{
                 motors[0].getVelocity(unit),
                 motors[1].getVelocity(unit),
@@ -135,7 +169,7 @@ public class SHPFourWheelDrive {
         };
     }
 
-    public double[] getWheelPositions(MotorUnit unit) {
+    public double[] getPositions(MotorUnit unit) {
         return new double[]{
                 motors[0].getPosition(unit),
                 motors[1].getPosition(unit),
@@ -144,7 +178,7 @@ public class SHPFourWheelDrive {
         };
     }
 
-    public double getWheelPositionsAveraged(MotorUnit unit) {
+    public double getPositionsAveraged(MotorUnit unit) {
         return (motors[0].getPosition(unit) +
                 motors[1].getPosition(unit) +
                 motors[2].getPosition(unit) +

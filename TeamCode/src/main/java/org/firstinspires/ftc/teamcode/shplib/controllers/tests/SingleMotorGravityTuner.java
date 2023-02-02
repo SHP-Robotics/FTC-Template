@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers.tests;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.roadrunner.util.RegressionUtil;
 import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
-
-import java.util.ArrayList;
 
 @Autonomous(group = "ff")
 public class SingleMotorGravityTuner extends LinearOpMode {

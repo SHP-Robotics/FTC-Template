@@ -3,16 +3,16 @@ package org.firstinspires.ftc.teamcode.shplib.controllers;
 import org.firstinspires.ftc.teamcode.Constants;
 
 public class VelocityPID extends PIDController {
-    private double currentVelocity = 0;
-    private double power = 0;
+    private double currentVelocity = 0.0;
+    private double power = 0.0;
 
-    public VelocityPID(double kP, double currentVelocity) {
-        super(kP * Constants.kVelocityPIDFactor);
+    public VelocityPID(double kP) {
+        super(kP);
         setCurrentVelocity(currentVelocity);
     }
 
-    public VelocityPID(double kP, double kI, double kD, double currentVelocity) {
-        super(kP * Constants.kVelocityPIDFactor, kI * Constants.kVelocityPIDFactor, kD * Constants.kVelocityPIDFactor);
+    public VelocityPID(double kP, double kI, double kD) {
+        super(kP, kI, kD);
         setCurrentVelocity(currentVelocity);
     }
 

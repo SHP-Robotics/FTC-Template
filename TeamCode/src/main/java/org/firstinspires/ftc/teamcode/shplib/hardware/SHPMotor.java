@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
+import org.firstinspires.ftc.teamcode.shplib.controllers.GainSchedule;
 import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.controllers.VelocityPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
@@ -36,6 +37,8 @@ public class SHPMotor {
     private double maxAcceleration = 0;
     private MotionProfile profile;
 
+    private double maxOutput = 1.0;
+
     public SHPMotor(@NonNull HardwareMap hardwareMap, String deviceName) {
         this.motor = hardwareMap.get(DcMotorEx.class, deviceName);
         this.unit = MotorUnit.TICKS;
@@ -52,6 +55,10 @@ public class SHPMotor {
         enableVoltageCompensation(hardwareMap);
     }
 
+    public void setMaxOutput(double maxOutput) {
+        this.maxOutput = maxOutput;
+    }
+
     public void enableVoltageCompensation(@NonNull HardwareMap hardwareMap) {
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
     }
@@ -64,25 +71,33 @@ public class SHPMotor {
         this.ticksPerRotation = ticksPerRotation;
     }
 
-    public void enablePositionPID(double kP) {
-        positionPID = new PositionPID(kP, getPosition(unit));
-    }
-
-    public void enablePositionPID(double kP, double kD) {
-        positionPID = new PositionPID(kP, 0, kD, getPosition(unit));
-    }
-
-    public void enablePositionPID(double kP, double kI, double kD) {
-        positionPID = new PositionPID(kP, kI, kD, getPosition(unit));
+    public void enablePositionPID(PositionPID positionPID) {
+        this.positionPID = positionPID;
     }
 
     public void disablePositionPID() {
         positionPID = null;
     }
 
+    public void scheduleGains(GainSchedule... schedules) {
+        if (positionPID != null) positionPID.scheduleGains(schedules);
+    }
+
+    public void setInitialPosition(MotorUnit unit) {
+        if (positionPID != null) positionPID.setInitialPosition(getPosition(unit));
+    }
+
     public void setPositionErrorTolerance(double errorTolerance) {
-        if (positionPID == null) return;
-        positionPID.setErrorTolerance(errorTolerance);
+        if (positionPID != null) positionPID.setErrorTolerance(errorTolerance);
+    }
+
+    public int getScheduleIndex() {
+        if (positionPID == null) return 0;
+        return positionPID.getScheduleIndex();
+    }
+
+    public void setScheduleIndex(int index) {
+        if (positionPID != null) positionPID.setScheduleIndex(index);
     }
 
     public boolean atPositionSetpoint() {
@@ -90,12 +105,8 @@ public class SHPMotor {
         return positionPID.atSetpoint();
     }
 
-    public void enableVelocityPID(double kP) {
-        velocityPID = new VelocityPID(kP, getVelocity(unit));
-    }
-
-    public void enableVelocityPID(double kP, double kI, double kD) {
-        velocityPID = new VelocityPID(kP, kI, kD, getVelocity(unit));
+    public void enableVelocityPID(VelocityPID velocityPID) {
+        this.velocityPID = velocityPID;
     }
 
     public void disableVelocityPID() {
@@ -127,7 +138,7 @@ public class SHPMotor {
         if (ff != null) power += ff.getStaticOutput(power);
         if (voltageSensor != null)
             power *= (Constants.kNominalVoltage / voltageSensor.getVoltage());
-        power = Range.clip(power, -1.0, 1.0);
+        power = Range.clip(power, -maxOutput, maxOutput);
         if (getPower() != power) motor.setPower(power);
     }
 

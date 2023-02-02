@@ -56,4 +56,11 @@ public class Command {
     public boolean isFinished() {
         return true;
     }
+
+    /**
+     * WARNING: May not work as intended with method chaining, use with SequentialCommandGroup instead.
+     */
+//    public void schedule() {
+//        CommandScheduler.getInstance().scheduleCommand(this);
+//    }
 }

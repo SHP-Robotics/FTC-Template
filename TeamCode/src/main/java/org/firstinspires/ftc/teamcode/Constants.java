@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-public final class Constants {
+import com.acmerobotics.dashboard.config.Config;
+
+import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
+
+@Config
+public class Constants {
     // Target voltage for voltage compensation
     public static final double kNominalVoltage = 12.0;
 
-    // Multiplied by each term before assigning to the controller
-    public static final double kPositionPIDFactor = 1.0 / 100.0;
-    public static final double kVelocityPIDFactor = 1.0 / 1000.0;
+    public static double kTopSetpoint = 2000.0;
 
     public static final class Drive {
         public static final String[] kMotorNames = new String[]{
@@ -14,6 +17,12 @@ public final class Constants {
                 "leftRear",
                 "rightFront",
                 "rightRear"
+        };
+        public static final FFController[] kFFs = new FFController[]{
+                new FFController(0.047),
+                new FFController(0.07),
+                new FFController(0.045),
+                new FFController(0.035)
         };
         public static final double kMinimumBias = 0.4;
     }
@@ -38,12 +47,11 @@ public final class Constants {
         public static final double kSlideStackDistance = 150.0;
 
         public static final double kSlideP = 0.17;
-        public static final double kSlideD = 0;//kSlideP * 10;//10;
+        public static final double kSlideD = 0;
         public static final double kSlideTolerance = 100;
 
         public static final double kSlideS = 0.035; // static friction
         public static final double kSlideG = 0.07; // gravity
-        public static final double kSlideV = 0;
     }
 
     public static final class Scoop {

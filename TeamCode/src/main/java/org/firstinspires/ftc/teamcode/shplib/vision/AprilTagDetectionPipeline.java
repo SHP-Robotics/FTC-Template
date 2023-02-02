@@ -179,12 +179,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
     void drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, Mat cameraMatrix) {
         // The points in 3D space we wish to project onto the 2D image plane.
         // The origin of the coordinate space is assumed to be in the center of the detection.
-        MatOfPoint3f axis = new MatOfPoint3f(
-                new Point3(0, 0, 0),
-                new Point3(length, 0, 0),
-                new Point3(0, length, 0),
-                new Point3(0, 0, -length)
-        );
+        MatOfPoint3f axis = new MatOfPoint3f(new Point3(0, 0, 0), new Point3(length, 0, 0), new Point3(0, length, 0), new Point3(0, 0, -length));
 
         // Project those points
         MatOfPoint2f matProjectedPoints = new MatOfPoint2f();
@@ -205,15 +200,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
 
         // The points in 3D space we wish to project onto the 2D image plane.
         // The origin of the coordinate space is assumed to be in the center of the detection.
-        MatOfPoint3f axis = new MatOfPoint3f(
-                new Point3(-tagWidth / 2, tagHeight / 2, 0),
-                new Point3(tagWidth / 2, tagHeight / 2, 0),
-                new Point3(tagWidth / 2, -tagHeight / 2, 0),
-                new Point3(-tagWidth / 2, -tagHeight / 2, 0),
-                new Point3(-tagWidth / 2, tagHeight / 2, -length),
-                new Point3(tagWidth / 2, tagHeight / 2, -length),
-                new Point3(tagWidth / 2, -tagHeight / 2, -length),
-                new Point3(-tagWidth / 2, -tagHeight / 2, -length));
+        MatOfPoint3f axis = new MatOfPoint3f(new Point3(-tagWidth / 2, tagHeight / 2, 0), new Point3(tagWidth / 2, tagHeight / 2, 0), new Point3(tagWidth / 2, -tagHeight / 2, 0), new Point3(-tagWidth / 2, -tagHeight / 2, 0), new Point3(-tagWidth / 2, tagHeight / 2, -length), new Point3(tagWidth / 2, tagHeight / 2, -length), new Point3(tagWidth / 2, -tagHeight / 2, -length), new Point3(-tagWidth / 2, -tagHeight / 2, -length));
 
         // Project those points
         MatOfPoint2f matProjectedPoints = new MatOfPoint2f();

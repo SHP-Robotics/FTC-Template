@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.controllers.ElevatorFFController;
+import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
@@ -49,14 +50,14 @@ public class ArmSubsystem extends Subsystem {
         leftSlide = new SHPMotor(hardwareMap, kLeftSlideName);
         leftSlide.reverseDirection();
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftSlide.enablePositionPID(kSlideP, kSlideD);
+        leftSlide.enablePositionPID(new PositionPID(kSlideP, 0.0, kSlideD));
         leftSlide.setPositionErrorTolerance(kSlideTolerance);
         leftSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
 
         rightSlide = new SHPMotor(hardwareMap, kRightSlideName);
 //        rightSlide.reverseDirection();
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightSlide.enablePositionPID(kSlideP, kSlideD);
+        rightSlide.enablePositionPID(new PositionPID(kSlideP, 0.0, kSlideD));
         rightSlide.setPositionErrorTolerance(kSlideTolerance);
         rightSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
 

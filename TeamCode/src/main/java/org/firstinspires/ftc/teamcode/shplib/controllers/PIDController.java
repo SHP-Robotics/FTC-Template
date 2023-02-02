@@ -3,26 +3,29 @@ package org.firstinspires.ftc.teamcode.shplib.controllers;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 
 public class PIDController {
-    private double kP, kI, kD = 0;
+    /*private*/ double kP, kI, kD;
 
-    private double period = 0; // seconds
-    private double integralSum = 0;
-    private double previousError = 0;
+    private double period = 0.0; // seconds
+    private double integralSum = 0.0;
+    private double previousError = 0.0;
 
-    private double previousTime = 0;
+    private double previousTime = 0.0;
 
-    private double error = 0;
-    private double errorTolerance = 1;
+    private double error = 0.0;
+    private double errorTolerance = 1.0;
 
     public PIDController(double kP) {
-        this.kP = kP;
+        setGains(kP, 0.0, 0.0);
     }
 
     public PIDController(double kP, double kI, double kD) {
+        setGains(kP, kI, kD);
+    }
+
+    public void setGains(double kP, double kI, double kD) {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
-
     }
 
     private void setPeriod(double period) {
@@ -70,5 +73,9 @@ public class PIDController {
 
     public boolean atSetpoint() {
         return Math.abs(error) < errorTolerance;
+    }
+
+    public void resetIntegralSum() {
+        integralSum = 0.0;
     }
 }

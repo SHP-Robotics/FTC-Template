@@ -31,27 +31,36 @@ public final class CommandScheduler {
     }
 
     public void scheduleCommand(Command command) {
-        // if scheduled command is a sequential command group, toss it away and begin the chain
-        if (command instanceof SequentialCommandGroup) {
-            ArrayList<Command> nextCommands = command.getNextCommands();
-            Command nextCommand = nextCommands.remove(0);
-            nextCommand.then(nextCommands);
-            scheduleCommand(nextCommand);
+        // if scheduled command is a command group, toss the object and schedule everything
+        if (command instanceof SequentialCommandGroup ||
+                command instanceof ParallelCommandGroup) {
+            scheduleWithCommands(command);
+            scheduleNextCommands(command);
             return;
         }
         // make sure that duplicate commands aren't scheduled
         for (Command c : commands) {
             if (c.getClass().equals(command.getClass())
                     && !(c instanceof RunCommand)
-                    && !(c instanceof WaitCommand)
-                    && !(c instanceof ParallelCommandGroup))
+                    && !(c instanceof WaitCommand))
                 return;
         }
         command.init();
         commands.add(command);
-        for (Command c : command.getWithCommands()) {
-            scheduleCommand(c);
-        }
+        scheduleWithCommands(command);
+    }
+
+    private void scheduleNextCommands(Command command) {
+        ArrayList<Command> nextCommands = command.getNextCommands();
+        if (nextCommands.size() == 0) return;
+        Command nextCommand = nextCommands.remove(0);
+        nextCommand.then(nextCommands);
+        scheduleCommand(nextCommand);
+    }
+
+    private void scheduleWithCommands(Command command) {
+        for (Command withCommand : command.getWithCommands())
+            scheduleCommand(withCommand);
     }
 
     // probably not the most efficient way of scheduling, but works pretty well for what we need
@@ -87,15 +96,9 @@ public final class CommandScheduler {
 
             if (command.isFinished()) {
                 command.end();
-                ArrayList<Command> nextCommands = command.getNextCommands();
                 commands.remove(i);
                 i--;
-
-                if (nextCommands.size() > 0) {
-                    Command nextCommand = nextCommands.remove(0);
-                    nextCommand.then(nextCommands);
-                    scheduleCommand(nextCommand);
-                }
+                scheduleNextCommands(command);
             }
         }
 

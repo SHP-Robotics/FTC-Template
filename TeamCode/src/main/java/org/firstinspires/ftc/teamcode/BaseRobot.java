@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
@@ -37,9 +38,11 @@ public class BaseRobot extends OpMode {
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
 //        vision = new VisionSubsystem(hardwareMap);
-        arm = new ArmSubsystem(hardwareMap);
+//        arm = new ArmSubsystem(hardwareMap);
 //        scoop = new ScoopSubsystem(hardwareMap);
 //        intake = new SHPMotor(hardwareMap, "intake");
+
+
     }
 
     // Called when you press the start button
@@ -74,5 +77,9 @@ public class BaseRobot extends OpMode {
         Clock.start();
         // Assigns telemetry object for Subsystem.periodic - DO NOT DELETE!
         CommandScheduler.getInstance().setTelemetry(telemetry);
+        // Turn on bulk reads to help optimize loop times
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
     }
 }
