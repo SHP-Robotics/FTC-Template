@@ -4,14 +4,14 @@ import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
 
 public final class Constants {
     // Target voltage for voltage compensation
-    public static final double K_NOMINAL_VOLTAGE = 12.0;
+    public static final double kNominalVoltage = 12.0;
 
     // Multiplied by each term before assigning to the controller
     public static final double K_POSITION_PID_FACTOR = 1.0 / 10000.0;
     public static final double K_VELOCITY_PID_FACTOR = 1.0 / 1000.0;
 
     public static final class Drive {
-        public static final String[] K_MOTOR_NAMES = new String[]{
+        public static final String[] kMotorNames = new String[]{
                 "leftFront",
                 "leftRear",
                 "rightFront",
@@ -28,7 +28,7 @@ public final class Constants {
     }
 
     public static final class Vision {
-        public static final double K_TAGSIZE_METERS = 0.039;
+        public static final double kTagsizeMeters = 0.039;
     }
 
     public static final class Arm {

@@ -22,7 +22,7 @@ public class DriveSubsystem extends Subsystem {
 
     public DriveSubsystem(HardwareMap hardwareMap) {
 //        rr = new RRMecanumDrive(hardwareMap, Constants.Drive.kMotorNames);
-        drive = new SHPMecanumDrive(hardwareMap, Constants.Drive.K_MOTOR_NAMES);
+        drive = new SHPMecanumDrive(hardwareMap, Constants.Drive.kMotorNames);
 
         for (int i = 0; i<4; i++)
             drive.motors[i].enablePositionPID(Constants.Drive.K_DRIVE_P);

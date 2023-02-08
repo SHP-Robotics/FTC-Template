@@ -223,7 +223,7 @@ private ArmSubsystem.State topState;
             if (Clock.hasElapsed(debounce, 0.5)) arm.incrementConeLevelDown();
 
         }));
-
+        //manual override
         new Trigger(gamepad1.b, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.3)) return;
             if (claw.isClawOpen()) {
