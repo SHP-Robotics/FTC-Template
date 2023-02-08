@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
@@ -27,6 +28,7 @@ public class BaseRobot extends OpMode {
     public ArmSubsystem arm;
 //    public ScoopSubsystem scoop;
 
+    public ClawSubsystem claw;
     public double previousTime = 0;
 
     // Called when you press the init button
@@ -37,8 +39,9 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
-//        vision = new VisionSubsystem(hardwareMap);
-//        arm = new ArmSubsystem(hardwareMap);
+        vision = new VisionSubsystem(hardwareMap);
+        arm = new ArmSubsystem(hardwareMap);
+        claw = new ClawSubsystem(hardwareMap);
 //        scoop = new ScoopSubsystem(hardwareMap);
 //        intake = new SHPMotor(hardwareMap, "intake");
 
