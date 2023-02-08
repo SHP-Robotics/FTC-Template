@@ -1,24 +1,38 @@
 package org.firstinspires.ftc.teamcode.shplib.hardware.sensors;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.roadrunner.util.AxesSigns;
+import org.firstinspires.ftc.teamcode.roadrunner.util.BNO055IMUUtil;
 
 public class SHPIMU {
-    private final IMU imu;
+    private final BNO055IMU imu;
 
-    public SHPIMU(HardwareMap hardwareMap, RevHubOrientationOnRobot.LogoFacingDirection logoDirection,
-                  RevHubOrientationOnRobot.UsbFacingDirection usbDirection) {
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                logoDirection,
-                usbDirection));
+    public SHPIMU(HardwareMap hardwareMap, AxesOrder order, AxesSigns signs) {
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
+        BNO055IMUUtil.remapAxes(imu, order, signs);
+    }
+
+    public SHPIMU(HardwareMap hardwareMap) {
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
     }
 
-    public double getYaw(AngleUnit unit) {
-        return imu.getRobotYawPitchRollAngles().getYaw(unit);
+    public void initialize() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
     }
+
+    public double getYaw() {
+        return imu.getAngularOrientation().firstAngle;
+    }
+
 }

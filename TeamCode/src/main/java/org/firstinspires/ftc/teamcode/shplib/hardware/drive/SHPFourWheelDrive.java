@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class SHPFourWheelDrive {
-    final SHPMotor[] motors;
+    public final SHPMotor[] motors;
     double maxVelocity = 0;
 
     PositionPID positionPID = null;

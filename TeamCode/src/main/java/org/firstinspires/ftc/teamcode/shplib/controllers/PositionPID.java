@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers;
 
+import org.firstinspires.ftc.teamcode.Constants;
+
 public class PositionPID extends ScheduledPIDController {
     private double currentPosition = 0.0;
 
-    public PositionPID(double kP) {
-        super(kP);
+    public PositionPID(double kP, double currentPosition) {
+        super(kP * Constants.K_POSITION_PID_FACTOR);
+        setCurrentPosition(currentPosition);
     }
 
     public PositionPID(double kP, double kI, double kD) {

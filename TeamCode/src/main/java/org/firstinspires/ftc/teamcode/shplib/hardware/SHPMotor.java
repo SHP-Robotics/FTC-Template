@@ -71,6 +71,9 @@ public class SHPMotor {
         this.ticksPerRotation = ticksPerRotation;
     }
 
+    public void enablePositionPID(double kP) {
+        positionPID = new PositionPID(kP, getPosition(unit));
+    }
     public void enablePositionPID(PositionPID positionPID) {
         this.positionPID = positionPID;
     }
@@ -137,7 +140,7 @@ public class SHPMotor {
     public void setPower(double power) {
         if (ff != null) power += ff.getStaticOutput(power);
         if (voltageSensor != null)
-            power *= (Constants.kNominalVoltage / voltageSensor.getVoltage());
+            power *= (Constants.K_NOMINAL_VOLTAGE / voltageSensor.getVoltage());
         power = Range.clip(power, -maxOutput, maxOutput);
         if (getPower() != power) motor.setPower(power);
     }
