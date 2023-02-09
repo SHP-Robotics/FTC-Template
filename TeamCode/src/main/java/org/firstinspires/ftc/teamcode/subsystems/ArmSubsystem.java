@@ -163,6 +163,7 @@ public class ArmSubsystem extends Subsystem {
                     break;
                 case STACKED_CONES:
                     slide.setPosition(coneLevel*160);
+                    incrementConeLevelDown();
                     break;
                 case MANUAL:
                     slide.setPosition(manualPosition);
