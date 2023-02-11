@@ -70,6 +70,7 @@ private ArmSubsystem.State topState;
                 .then(new MoveArmCommand(arm, MoveArmCommand.Direction.BOTTOM)));
 
 
+
         //setting top position
         new Trigger(gamepad2.a,
                 new RunCommand(( () -> {topState = ArmSubsystem.State.CARRYING;})));
@@ -201,7 +202,10 @@ private ArmSubsystem.State topState;
                 .then(new RunCommand(( () -> {topState = ArmSubsystem.State.SHORT;}))));
 
         new Trigger(gamepad1.right_trigger>0.5, new RunCommand(( () -> {drive.setDriveBias(arm.getDriveBias(), 0.55);})));
-        new Trigger(gamepad1.right_trigger <= 0.5, new RunCommand(( () -> {drive.setDriveBias(arm.getDriveBias(), 0);})));
+        new Trigger(gamepad1.right_trigger <= 0.5, new RunCommand(( () -> {
+            if(claw.isClawOpen()) drive.setDriveBias(arm.getCarryingDriveBias(),0);
+            else drive.setDriveBias(arm.getDriveBias(), 0);
+        })));
 
         new Trigger(gamepad1.dpad_right, new RunCommand(( () -> {arm.override = false;}))
                 .then(new MoveArmCommand(arm, MoveArmCommand.Direction.MIDDLE))

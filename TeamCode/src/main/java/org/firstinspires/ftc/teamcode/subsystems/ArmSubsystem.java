@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 public class ArmSubsystem extends Subsystem {
     public final SHPMotor slide;
     public boolean override;
+    double stateEncoderValue;
     public int coneLevel;
     private double manualPosition;
 
@@ -64,8 +65,18 @@ public class ArmSubsystem extends Subsystem {
         this.state = state;
         previousTime = Clock.now();
     }
+
+    public double getCarryingDriveBias(){
+        if(slide.getPosition(MotorUnit.TICKS) > stateEncoderValue*0.9)
+            return 0.1;
+        else if(slide.getPosition(MotorUnit.TICKS) > stateEncoderValue*0.2)
+            return Math.abs(slide.getPosition(MotorUnit.TICKS) / stateEncoderValue - 1.0);
+        else
+            return 0.8;
+    }
+
     public double getDriveBias() {
-        if (slide.getPosition(MotorUnit.TICKS)>3500)
+        if (slide.getPosition(MotorUnit.TICKS)<3500)
             return Math.abs(slide.getPosition(MotorUnit.TICKS) / Constants.Arm.K_SLIDE_TOP - 1.0);
         else if (getState() == State.MIDDLE) {
             return 0.5;
@@ -135,6 +146,7 @@ public class ArmSubsystem extends Subsystem {
             switch (state) {
                 case TOP:
                     slide.setPosition(Constants.Arm.K_SLIDE_TOP);
+                    stateEncoderValue = Constants.Arm.K_SLIDE_TOP;
                     telemetry.addData("state: ", "TOP");
                     break;
                 case CARRYING:
@@ -143,6 +155,7 @@ public class ArmSubsystem extends Subsystem {
                     break;
                 case MIDDLE:
                     slide.setPosition(Constants.Arm.K_SLIDE_MIDDLE);
+                    stateEncoderValue = Constants.Arm.K_SLIDE_MIDDLE;
                     telemetry.addData("state: ", "Middle");
                     break;
                 case TOP_OF_MIDDLE:
@@ -150,10 +163,12 @@ public class ArmSubsystem extends Subsystem {
                     break;
                 case BOTTOM:
                     slide.setPosition(Constants.Arm.K_SLIDE_BOTTOM);
+                    stateEncoderValue = Constants.Arm.K_SLIDE_BOTTOM;
                     telemetry.addData("state: ", "BOTTOM");
                     break;
                 case SHORT:
                     slide.setPosition(Constants.Arm.K_SLIDE_SHORT);
+                    stateEncoderValue = Constants.Arm.K_SLIDE_SHORT;
                     break;
                 case TOP_OF_SHORT:
                     slide.setPosition(Constants.Arm.K_SLIDE_SHORT - 400);
@@ -163,6 +178,7 @@ public class ArmSubsystem extends Subsystem {
                     break;
                 case STACKED_CONES:
                     slide.setPosition(coneLevel*160);
+                    stateEncoderValue = coneLevel*160;
                     incrementConeLevelDown();
                     break;
                 case MANUAL:
