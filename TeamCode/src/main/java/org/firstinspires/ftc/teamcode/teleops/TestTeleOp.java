@@ -59,6 +59,9 @@ private ArmSubsystem.State topState;
         super.loop();
         //drive.setDriveBias(arm.getDriveBias(), maxSpeed);
         telemetry.addData("max speed: ", maxSpeed);
+        telemetry.addData("SLIDE ENCODER: ", arm.slide.getPosition(MotorUnit.TICKS));
+        telemetry.addData("POWER: ", arm.slide.getPower());
+
         new Trigger(gamepad1.y,
                 new RunCommand(( () -> {drive.imu.initialize();})));
 
@@ -125,8 +128,6 @@ private ArmSubsystem.State topState;
             }
             debounce = Clock.now();
         }));*/
-
-
 
         /*new Trigger(gamepad1.a, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
@@ -201,7 +202,7 @@ private ArmSubsystem.State topState;
                 .then(new MoveArmCommand(arm, MoveArmCommand.Direction.SHORT))
                 .then(new RunCommand(( () -> {topState = ArmSubsystem.State.SHORT;}))));
 
-        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(( () -> {drive.setDriveBias(arm.getDriveBias(), 0.55);})));
+        new Trigger(gamepad1.right_trigger > 0.5, new RunCommand(( () -> {drive.setDriveBias(arm.getDriveBias(), 0.55);})));
         new Trigger(gamepad1.right_trigger <= 0.5, new RunCommand(( () -> {
             if(claw.isClawOpen()) drive.setDriveBias(arm.getCarryingDriveBias(),0);
             else drive.setDriveBias(arm.getDriveBias(), 0);
@@ -212,11 +213,11 @@ private ArmSubsystem.State topState;
                 .then(new RunCommand(( () -> {topState = ArmSubsystem.State.MIDDLE;}))));
 
         new Trigger(gamepad1.right_bumper, new RunCommand(( () -> {
-            desiredPosition = (int)(arm.slide.getPosition(MotorUnit.TICKS)) + 200;
+            desiredPosition = (int)(arm.slide.getPosition(MotorUnit.TICKS)) + 500;
             arm.setManualPos(desiredPosition);
         })));
         new Trigger(gamepad1.left_bumper, new RunCommand(( () -> {
-            desiredPosition = (int)(arm.slide.getPosition(MotorUnit.TICKS)) - 200;
+            desiredPosition = (int)(arm.slide.getPosition(MotorUnit.TICKS)) - 500;
             arm.setManualPos(desiredPosition);
         })));
 

@@ -41,17 +41,18 @@ public final class Constants {
         public static final double K_SLIDE_G = 0.11; //THIS MIGHT BE AN ISSUE
         //"Didn't turn out to be" - Aarav
         //TODO: Tune G
-        public static final double K_SLIDE_TOP = 3900 - OFFSET;
-        public static final double K_SLIDE_MIDDLE = 2750 - OFFSET;
-        public static final double K_SLIDE_SHORT = 1600 - OFFSET;
-        public static final double K_SLIDE_CARRY = 250 - OFFSET;
+        //TODO: TUNE SLIDE CONSTANTS LLLLL ARNAV THE SLIDE IS DIFFERENT ABSOLUTE MAX IS 1150
+        public static final double K_SLIDE_TOP = 1075 - OFFSET;
+        public static final double K_SLIDE_MIDDLE = 700 - OFFSET;
+        public static final double K_SLIDE_SHORT = 500 - OFFSET;
+        public static final double K_SLIDE_CARRY = 75 - OFFSET;
         public static final double K_SLIDE_BOTTOM = 10 - OFFSET;
 
     }
 
     public static final class Scoop {
         public static final String K_CLAW_NAME = "claw";
-        public static final double K_OUT = 1;
+        public static final double K_OUT = 0.4;
         public static final double K_IN = 0;
     }
 }
