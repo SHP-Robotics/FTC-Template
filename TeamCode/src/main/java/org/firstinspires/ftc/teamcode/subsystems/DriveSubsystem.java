@@ -18,6 +18,8 @@ public class DriveSubsystem extends Subsystem {
     //    private final RRMecanumDrive rr;
     private final SHPMecanumDrive drive;
     public final SHPIMU imu;
+    double strafe = 0;
+    double vert = 0;
     private double bias = 1.0;
 
     public DriveSubsystem(HardwareMap hardwareMap) {
@@ -33,10 +35,17 @@ public class DriveSubsystem extends Subsystem {
     }
 
     public void mecanum(double leftY, double leftX, double rightX) {
+        vert = leftY;
+        if (Math.abs(leftX)<0.2)
+            strafe = 0;
+        else
+            strafe = leftX;
         Vector2d vector = new Vector2d(
-                leftY,
-                leftX
+                strafe,
+                vert
         ).rotated(-imu.getYaw()+PoseStorage.offset);
+
+
 
 
         drive.mecanum(bias*vector.getX(), bias*vector.getY(), bias*0.8*rightX); // field oriented
