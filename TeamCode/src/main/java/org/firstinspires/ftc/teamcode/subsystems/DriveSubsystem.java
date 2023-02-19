@@ -53,7 +53,8 @@ public class DriveSubsystem extends Subsystem {
 
 
     public void setDriveBias(double driveBias, double add) {
-        bias = Range.clip(driveBias, 0.3+add, 0.5+add);
+        bias = Range.clip(driveBias, 0.2, 0.8);
+
     }
 
     public void normalmecanum(double leftY, double leftX, double rightX) {

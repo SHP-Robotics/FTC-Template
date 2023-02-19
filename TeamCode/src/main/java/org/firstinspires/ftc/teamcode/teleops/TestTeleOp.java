@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
@@ -13,6 +16,7 @@ import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 
+@Config
 @TeleOp
 public class TestTeleOp extends BaseRobot {
 private double debounce;
@@ -22,6 +26,8 @@ private ArmSubsystem.State topState;
     @Override
     public void init() {
         super.init();
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
@@ -57,10 +63,10 @@ private ArmSubsystem.State topState;
 
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
-        //drive.setDriveBias(arm.getDriveBias(), maxSpeed);
+        drive.setDriveBias(arm.getCarryingDriveBias(), maxSpeed);
         telemetry.addData("max speed: ", maxSpeed);
-        telemetry.addData("SLIDE ENCODER: ", arm.slide.getPosition(MotorUnit.TICKS));
-        telemetry.addData("POWER: ", arm.slide.getPower());
+        //telemetry.addData("SLIDE ENCODER: ", arm.slide.getPosition(MotorUnit.TICKS));
+        //telemetry.addData("POWER: ", arm.slide.getPower());
 
         new Trigger(gamepad1.y,
                 new RunCommand(( () -> {drive.imu.initialize();})));

@@ -126,6 +126,7 @@ public class SHPMotor {
         return velocityPID.atSetpoint();
     }
 
+
     public void enableFF(FFController ff) {
         this.ff = ff;
     }
@@ -313,6 +314,7 @@ public class SHPMotor {
     public void resetEncoder() {
         resetEncoder(false);
     }
+
 
     public void resetEncoder(boolean runUsingBuiltInControl) {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -44,6 +46,7 @@ public class ArmSubsystem extends Subsystem {
         slide.setPositionErrorTolerance(Constants.Arm.K_SLIDE_TOLERANCE);
         slide.enableFF(new ElevatorFFController(0, Constants.Arm.K_SLIDE_G));
         coneLevel = 5;
+        stateEncoderValue = Constants.Arm.K_SLIDE_TOP;
         /*
          slide.enableVelocityPID(Constants.Arm.kSlideP);
          slide.enableProfiling(Constants.Arm.kSlideMaxVelocity);
@@ -66,14 +69,20 @@ public class ArmSubsystem extends Subsystem {
         previousTime = Clock.now();
     }
 
-    public double getCarryingDriveBias(){
-        if(slide.getPosition(MotorUnit.TICKS) > stateEncoderValue*0.9)
-            return 0.1;
-        else if(slide.getPosition(MotorUnit.TICKS) > stateEncoderValue*0.2)
-            return Math.abs(slide.getPosition(MotorUnit.TICKS) / stateEncoderValue - 1.0);
-        else
+    public double getCarryingDriveBias() {
+        if (getState() != State.BOTTOM && getState() != State.CARRYING) {
+            if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.9)
+                return 0.3;
+            else if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.2)
+                return Math.abs(slide.getPosition(MotorUnit.TICKS) / stateEncoderValue - 1.0);
+            else
+                return 0.8;
+        }
+        else {
             return 0.8;
+        }
     }
+
 
     public double getDriveBias() {
         if (slide.getPosition(MotorUnit.TICKS)<3500)
@@ -140,7 +149,9 @@ public class ArmSubsystem extends Subsystem {
     @Override
     public void periodic(Telemetry telemetry) {
         telemetry.addData("slide ticks: ", slide.getPosition(MotorUnit.TICKS));
-        telemetry.addData("DIFFERENCE: ", Constants.Arm.K_SLIDE_TOP - slide.getPosition(MotorUnit.TICKS));
+        telemetry.addData("stateEncoderValue: ", stateEncoderValue);
+
+
 //        telemetry.addData("profile output: ", slide.followProfile(Clock.elapsed(previousTime)));
         if (!override) {
             switch (state) {
