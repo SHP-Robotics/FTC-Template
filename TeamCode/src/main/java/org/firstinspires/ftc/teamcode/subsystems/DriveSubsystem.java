@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.util.AxesSigns;
+import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.hardware.drive.SHPMecanumDrive;
 import org.firstinspires.ftc.teamcode.shplib.hardware.sensors.SHPIMU;
@@ -18,6 +21,8 @@ public class DriveSubsystem extends Subsystem {
     //    private final RRMecanumDrive rr;
     private final SHPMecanumDrive drive;
     public final SHPIMU imu;
+    public final Encoder parallelEncoder, perpendicularEncoder;
+
     double strafe = 0;
     double vert = 0;
     private double bias = 1.0;
@@ -32,6 +37,11 @@ public class DriveSubsystem extends Subsystem {
         // Change AxesOrder and AxesSigns according to your hub orientation
         // Omit Axes arguments for standard orientation
         imu = new SHPIMU(hardwareMap, AxesOrder.ZYX, AxesSigns.PPN);
+
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "parallelEncoder"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "perpendicularEncoder"));
+        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
+        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public void mecanum(double leftY, double leftX, double rightX) {

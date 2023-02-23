@@ -3,41 +3,49 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
+import org.firstinspires.ftc.teamcode.commands.EncoderDriveCommand;
+import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.teamcode.BaseRobot;
+import org.firstinspires.ftc.teamcode.commands.DriveCommand;
+import org.firstinspires.ftc.teamcode.commands.FindAprilTagCommand;
+import org.firstinspires.ftc.teamcode.commands.InteractWithConeCommand;
+import org.firstinspires.ftc.teamcode.commands.MoveArmCommand;
+import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
+import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
+import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
+import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
+import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous(preselectTeleOp = "CommandBasedTeleOp")
 public class CommandBasedAuto extends BaseRobot {
-//    SHPMecanumAutoDrive autoDrive;
+    DriveSubsystem drive;
 
     @Override
     public void init() {
         super.init();
-//        PositionPID pid = new PositionPID(0.15);
-//        pid.setErrorTolerance(100);
-//        autoDrive = new SHPMecanumAutoDrive(hardwareMap, kMotorNames, 0.15, 0.0, 0.0);
-//        autoDrive.enableFF(new FFController(0.01));
     }
 
     @Override
     public void start() {
         super.start();
+        CommandScheduler myCommand = CommandScheduler.getInstance();
+        myCommand.scheduleCommand(
+                new RunCommand(() -> {
+                            claw.setState(ClawSubsystem.State.CLOSED);
+                        })
+                .then(new RunCommand(() -> {
+                    arm.setState(ArmSubsystem.State.CARRYING);
+                }))
+                .then(new EncoderDriveCommand(drive,0.4, 0, 0, true, 0, 200))
+        );
 
-//        CommandScheduler.getInstance().scheduleCommand(
-//                new RunCommand(() -> {
-//                    arm.closeClaw();
-//                })
-//                        .then(new WaitCommand(0.5))
-//                        .then(new RunCommand(() -> {
-//                            arm.setState(ArmSubsystem.State.HUB);
-//                        }))
-//                        .then(new WaitCommand(0.5))
-//                        .then(new DriveByCommand(autoDrive, 3000))
-//                        .then(new RaiseToHighCommand(arm))
-//                        .then(new DriveByCommand(autoDrive, 500))
-//                        .then(new DropConeCommand(arm))
-////                        .then(new DriveByCommand(autoDrive, 3000, 3000, -3000, -3000))
-////                        .then(new DriveByCommand(autoDrive, -2000, 2000, 2000, -2000))
-//
-//        );
+
     }
 
     @Override
