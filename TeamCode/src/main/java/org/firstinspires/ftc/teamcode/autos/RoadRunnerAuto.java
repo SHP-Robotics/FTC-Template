@@ -1,18 +1,23 @@
-package org.firstinspires.ftc.teamcode.autos;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-/**
- * To understand how Road Runner works and setting it up: https://learnroadrunner.com/
- */
-
-
-@Autonomous
-
-public class RoadRunnerAuto extends LinearOpMode {
-
-    public void runOpMode() {
+//package org.firstinspires.ftc.teamcode.autos;
+//
+//import com.acmerobotics.roadrunner.geometry.Pose2d;
+//import com.acmerobotics.roadrunner.geometry.Vector2d;
+//import com.acmerobotics.roadrunner.trajectory.Trajectory;
+//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+//
+//import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+//
+///**
+// * To understand how Road Runner works and setting it up: https://learnroadrunner.com/
+// */
+//
+//
+//@Autonomous
+//
+//public class RoadRunnerAuto extends LinearOpMode {
+//
+//    public void runOpMode() {
 //        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 //
 //        Pose2d startPos = new Pose2d(10, 10, Math.toRadians(90));
@@ -47,5 +52,5 @@ public class RoadRunnerAuto extends LinearOpMode {
 //        // done
 //
 //        return;
-    }
-}
+//    }
+//}

@@ -36,25 +36,24 @@ public class DriveSubsystem extends Subsystem {
 
     public void mecanum(double leftY, double leftX, double rightX) {
         vert = leftY;
-        if (Math.abs(leftX)<0.2)
+        if (Math.abs(leftX)<0.5)
             strafe = 0;
         else
             strafe = leftX;
         Vector2d vector = new Vector2d(
-                strafe,
-                vert
+                vert,
+                strafe
         ).rotated(-imu.getYaw()+PoseStorage.offset);
 
 
 
 
-        drive.mecanum(bias*vector.getX(), bias*vector.getY(), bias*0.8*rightX); // field oriented
+        drive.mecanum(-bias*vector.getY(), bias*vector.getX(), bias*0.8*rightX); // field oriented
     }
 
 
     public void setDriveBias(double driveBias, double add) {
-        bias = Range.clip(driveBias, 0.2, 0.8);
-
+        bias = Range.clip(driveBias, 0.1+add, 0.55+add);
     }
 
     public void normalmecanum(double leftY, double leftX, double rightX) {

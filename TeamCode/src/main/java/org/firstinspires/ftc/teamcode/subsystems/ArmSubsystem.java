@@ -69,23 +69,31 @@ public class ArmSubsystem extends Subsystem {
         previousTime = Clock.now();
     }
 
-    public double getCarryingDriveBias() {
-        if (getState() != State.BOTTOM && getState() != State.CARRYING) {
-            if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.9)
-                return 0.3;
-            else if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.2)
+//    public double getCarryingDriveBias() {
+//        if (getState() != State.BOTTOM && getState() != State.CARRYING) {
+//            if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.9)
+//                return 0.3;
+//            else if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.2)
+//                return Math.abs(slide.getPosition(MotorUnit.TICKS) / stateEncoderValue - 1.0);
+//            else
+//                return 0.8;
+//        }
+//        else {
+//            return 0.8;
+//        }
+//    }
+
+
+    public double getDriveBias(boolean clawOpen) {
+        if(getState() != State.BOTTOM && getState() != State.CARRYING){
+            if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.925)
+                return 0.2;
+            else if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.5)
                 return Math.abs(slide.getPosition(MotorUnit.TICKS) / stateEncoderValue - 1.0);
             else
-                return 0.8;
+                return 0.7;
         }
-        else {
-            return 0.8;
-        }
-    }
-
-
-    public double getDriveBias() {
-        if (slide.getPosition(MotorUnit.TICKS)<3500)
+        else if (slide.getPosition(MotorUnit.TICKS)<3500)
             return Math.abs(slide.getPosition(MotorUnit.TICKS) / Constants.Arm.K_SLIDE_TOP - 1.0);
         else if (getState() == State.MIDDLE) {
             return 0.5;
@@ -189,8 +197,6 @@ public class ArmSubsystem extends Subsystem {
                     break;
                 case STACKED_CONES:
                     slide.setPosition(coneLevel*160);
-                    stateEncoderValue = coneLevel*160;
-                    incrementConeLevelDown();
                     break;
                 case MANUAL:
                     slide.setPosition(manualPosition);

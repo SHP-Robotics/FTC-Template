@@ -33,7 +33,7 @@ private ArmSubsystem.State topState;
         drive.setDefaultCommand(
                 new RunCommand(
                         () ->
-                                drive.mecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
+                                drive.mecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x)
                 )
         );
 
@@ -50,7 +50,7 @@ private ArmSubsystem.State topState;
         super.start();
         debounce = Clock.now();
         arm.override = false;
-        maxSpeed = 0.45;
+        maxSpeed = 0.75; //TODO: SPEED HERE
         topState = ArmSubsystem.State.TOP;
 
 
@@ -63,7 +63,7 @@ private ArmSubsystem.State topState;
 
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
-        drive.setDriveBias(arm.getCarryingDriveBias(), maxSpeed);
+//        drive.setDriveBias(arm.getCarryingDriveBias(), maxSpeed);
         telemetry.addData("max speed: ", maxSpeed);
         //telemetry.addData("SLIDE ENCODER: ", arm.slide.getPosition(MotorUnit.TICKS));
         //telemetry.addData("POWER: ", arm.slide.getPower());
@@ -208,10 +208,12 @@ private ArmSubsystem.State topState;
                 .then(new MoveArmCommand(arm, MoveArmCommand.Direction.SHORT))
                 .then(new RunCommand(( () -> {topState = ArmSubsystem.State.SHORT;}))));
 
-        new Trigger(gamepad1.right_trigger > 0.5, new RunCommand(( () -> {drive.setDriveBias(arm.getDriveBias(), 0.55);})));
+        new Trigger(gamepad1.right_trigger > 0.5, new RunCommand(( () -> {
+            drive.setDriveBias(arm.getDriveBias(claw.isClawOpen()), 0.55);
+        })));
         new Trigger(gamepad1.right_trigger <= 0.5, new RunCommand(( () -> {
-            if(claw.isClawOpen()) drive.setDriveBias(arm.getCarryingDriveBias(),0);
-            else drive.setDriveBias(arm.getDriveBias(), 0);
+            //if(claw.isClawOpen()) drive.setDriveBias(arm.getCarryingDriveBias(),0);
+            drive.setDriveBias(arm.getDriveBias(claw.isClawOpen()), 0);
         })));
 
         new Trigger(gamepad1.dpad_right, new RunCommand(( () -> {arm.override = false;}))
@@ -219,11 +221,11 @@ private ArmSubsystem.State topState;
                 .then(new RunCommand(( () -> {topState = ArmSubsystem.State.MIDDLE;}))));
 
         new Trigger(gamepad1.right_bumper, new RunCommand(( () -> {
-            desiredPosition = (int)(arm.slide.getPosition(MotorUnit.TICKS)) + 500;
+            desiredPosition = (int)(arm.slide.getPosition(MotorUnit.TICKS)) + 100;
             arm.setManualPos(desiredPosition);
         })));
         new Trigger(gamepad1.left_bumper, new RunCommand(( () -> {
-            desiredPosition = (int)(arm.slide.getPosition(MotorUnit.TICKS)) - 500;
+            desiredPosition = (int)(arm.slide.getPosition(MotorUnit.TICKS)) - 100;
             arm.setManualPos(desiredPosition);
         })));
 
@@ -231,7 +233,7 @@ private ArmSubsystem.State topState;
             if (!Clock.hasElapsed(debounce, 0.5)) return;
             arm.setState(ArmSubsystem.State.STACKED_CONES);
             debounce = Clock.now();
-            //if (Clock.hasElapsed(debounce, 0.5)) arm.incrementConeLevelDown();
+            if (Clock.hasElapsed(debounce, 0.5)) arm.incrementConeLevelDown();
 
         }));
         //manual override

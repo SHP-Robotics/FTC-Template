@@ -35,14 +35,14 @@ public final class Constants {
         public static final double OFFSET = 0;
         public static final String K_SLIDE_NAME = "slide";
 
-        public static final double K_SLIDE_P = 13; // 15 best value
+        public static final double K_SLIDE_P = 19; // 15 best value
         public static final double K_SLIDE_TOLERANCE = 0.05;
         public static final double K_SLIDE_MAX_VELOCITY = 1;
-        public static final double K_SLIDE_G = 0.11; //THIS MIGHT BE AN ISSUE
+        public static final double K_SLIDE_G = 0.099; //THIS MIGHT BE AN ISSUE
         //"Didn't turn out to be" - Aarav
         //TODO: Tune G
         //TODO: TUNE SLIDE CONSTANTS
-        public static final double K_SLIDE_TOP = 3900 - OFFSET;
+        public static final double K_SLIDE_TOP = 3930 - OFFSET;
         public static final double K_SLIDE_MIDDLE = 2750 - OFFSET;
         public static final double K_SLIDE_SHORT = 1600 - OFFSET;
         public static final double K_SLIDE_CARRY = 250 - OFFSET;
@@ -52,7 +52,7 @@ public final class Constants {
 
     public static final class Scoop {
         public static final String K_CLAW_NAME = "claw";
-        public static final double K_OUT = 0.52;
+        public static final double K_OUT = 0.375;
         public static final double K_IN = 0;
     }
 }
