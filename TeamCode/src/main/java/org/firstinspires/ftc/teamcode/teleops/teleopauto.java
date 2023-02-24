@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous(preselectTeleOp = "TestTeleOp")
-public class CommandBasedAuto extends BaseRobot {
+public class teleopauto extends BaseRobot {
     DriveSubsystem drive;
 
     @Override
@@ -39,15 +39,10 @@ public class CommandBasedAuto extends BaseRobot {
                 new RunCommand(() -> {
                     claw.setState(ClawSubsystem.State.CLOSED);
                 })
-                        .then (new WaitCommand(2))
                         .then(new RunCommand(() -> {
                             arm.setState(ArmSubsystem.State.CARRYING);
                         }))
-                        //.then(new EncoderDriveCommand(drive,0, 0.3, 0, 40, 0))
-                        .then(new RunCommand(() -> {
-                            arm.setState(ArmSubsystem.State.TOP);
-                        }))
-                        .then(new EncoderDriveCommand(drive,0.3, 0, 0, 0, 60))
+                        .then(new EncoderDriveCommand(drive,0.4, 0, 0, 0, 20))
         );
 
 

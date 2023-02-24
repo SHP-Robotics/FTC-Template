@@ -13,19 +13,20 @@ public class EncoderDriveCommand extends Command {
     private double yPos;
     double leftY; double leftX; double rightX; double time;
 
+    double targetX, targetY;
     public static double TICKS_PER_REV = 8192;
-    public static double WHEEL_RADIUS = 1.25; // in
+    public static double WHEEL_RADIUS = 1; // in
 
     public EncoderDriveCommand(DriveSubsystem drive, double leftY, double leftX, double rightX, double xPosInches, double yPosInches) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
-        this.leftY = -leftY;
+        this.leftY = leftY;
         this.leftX = leftX;
         this.rightX = rightX;
         this.xPos = inchesToEncoderTicks(xPosInches);
         this.yPos = inchesToEncoderTicks(yPosInches);;
-        System.out.println(xPos);
+        //System.out.println(xPos);
 
     }
 
@@ -71,6 +72,6 @@ public class EncoderDriveCommand extends Command {
     // Returning true causes execute() to be called once
     @Override
     public boolean isFinished() {
-        return Math.abs(drive.perpendicularEncoder.getCurrentPosition()-xPos)<100 && Math.abs(drive.parallelEncoder.getCurrentPosition()-yPos)<100;
+        return (drive.perpendicularEncoder.getCurrentPosition()>xPos && drive.parallelEncoder.getCurrentPosition()>yPos);
     }
 }
