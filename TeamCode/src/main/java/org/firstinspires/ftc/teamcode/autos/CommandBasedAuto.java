@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.openftc.apriltag.AprilTagDetection;
 
-@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
+@Autonomous(preselectTeleOp = "TestTeleOp")
 public class CommandBasedAuto extends BaseRobot {
     DriveSubsystem drive;
 
@@ -42,7 +42,7 @@ public class CommandBasedAuto extends BaseRobot {
                 .then(new RunCommand(() -> {
                     arm.setState(ArmSubsystem.State.CARRYING);
                 }))
-                .then(new EncoderDriveCommand(drive,0.4, 0, 0, true, 0, 200))
+                .then(new EncoderDriveCommand(drive,0.4, 0, 0, 0, 20))
         );
 
 
@@ -51,6 +51,7 @@ public class CommandBasedAuto extends BaseRobot {
     @Override
     public void loop() {
         super.loop();
-//        telemetry.addData("auto drive at setpoint", autoDrive.atPositionSetpoint() ? "true" : "false");
+        telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
+        telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());
     }
 }

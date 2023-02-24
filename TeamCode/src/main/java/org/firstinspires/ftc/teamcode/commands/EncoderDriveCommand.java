@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.commands;
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.hardware.lynx.LynxModule;
 
 public class EncoderDriveCommand extends Command {
     private final DriveSubsystem drive;
@@ -10,20 +12,21 @@ public class EncoderDriveCommand extends Command {
     private double xPos;
     private double yPos;
     double leftY; double leftX; double rightX; double time;
-    boolean robot = true;
+
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1.25; // in
 
-    public EncoderDriveCommand(DriveSubsystem drive, double leftY, double leftX, double rightX, boolean robot, double xPos, double yPos) {
+    public EncoderDriveCommand(DriveSubsystem drive, double leftY, double leftX, double rightX, double xPosInches, double yPosInches) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
         this.leftY = -leftY;
         this.leftX = leftX;
         this.rightX = rightX;
-        this.xPos = inchesToEncoderTicks(xPos);
-        this.yPos = inchesToEncoderTicks(yPos);;
-        this.robot = robot;
+        this.xPos = inchesToEncoderTicks(xPosInches);
+        this.yPos = inchesToEncoderTicks(yPosInches);;
+        System.out.println(xPos);
+
     }
 
 
@@ -33,11 +36,21 @@ public class EncoderDriveCommand extends Command {
 
     }
     public static double encoderTicksToInches(double ticks) {
+
         return WHEEL_RADIUS * 2 * Math.PI * ticks / TICKS_PER_REV;
     }
 
     public static double inchesToEncoderTicks(double inches) {
-        return inches/(WHEEL_RADIUS*2*TICKS_PER_REV*Math.PI);
+        double c = (((WHEEL_RADIUS*2)*Math.PI));
+        double ticksPerInch = c/TICKS_PER_REV;
+        return ticksPerInch * inches;
+        //return inches/(WHEEL_RADIUS*2*TICKS_PER_REV*Math.PI);
+    }
+    public double getxPos() {
+        return xPos;
+    }
+    public double getyPos() {
+        return yPos;
     }
 
 
@@ -58,6 +71,6 @@ public class EncoderDriveCommand extends Command {
     // Returning true causes execute() to be called once
     @Override
     public boolean isFinished() {
-        return Math.abs(drive.perpendicularEncoder.getCurrentPosition()-xPos)<1000 && Math.abs(drive.parallelEncoder.getCurrentPosition()-yPos)<1000;
+        return Math.abs(drive.perpendicularEncoder.getCurrentPosition()-xPos)<100 && Math.abs(drive.parallelEncoder.getCurrentPosition()-yPos)<100;
     }
 }
