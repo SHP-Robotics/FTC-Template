@@ -42,7 +42,7 @@ public class EncoderDriveCommand extends Command {
 
     public static double inchesToEncoderTicks(double inches) {
         double c = (((WHEEL_RADIUS*2)*Math.PI));
-        double ticksPerInch = c/TICKS_PER_REV;
+        double ticksPerInch = TICKS_PER_REV/c;
         return ticksPerInch * inches;
         //return inches/(WHEEL_RADIUS*2*TICKS_PER_REV*Math.PI);
     }
