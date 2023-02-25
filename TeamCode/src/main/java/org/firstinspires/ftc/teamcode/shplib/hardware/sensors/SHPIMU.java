@@ -33,10 +33,10 @@ public class SHPIMU {
     }
 
     public double getYaw() {
-        return imu.getAngularOrientation().firstAngle;
+        return -imu.getAngularOrientation().firstAngle;
     }
     public double getAutoYaw() {
-        return imu.getAngularOrientation().angleUnit.getUnnormalized().toDegrees(-getYaw());
+        return imu.getAngularOrientation().angleUnit.getUnnormalized().toDegrees(getYaw());
     }
 
 
