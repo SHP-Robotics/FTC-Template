@@ -1,29 +1,29 @@
-package org.firstinspires.ftc.teamcode.commands;
+package org.firstinspires.ftc.teamcode.AAAInsurance;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
-import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.hardware.lynx.LynxModule;
 
-public class EncoderTurnDriveCommand extends Command {
+public class EncoderStraightDriveCommand extends Command {
     private final DriveSubsystem drive;
     private double startTime;
-    private double degrees;
+    private double xPos;
+    private double yPos;
     double leftY; double leftX; double rightX; double time;
 
     double targetX, targetY;
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
 
-    public EncoderTurnDriveCommand(DriveSubsystem drive, double leftY, double leftX, double rightX, double degrees) {
+    public EncoderStraightDriveCommand(DriveSubsystem drive, double power, double distance) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
-        this.leftY = leftY;
-        this.leftX = leftX;
-        this.rightX = rightX;
-        this.degrees = degrees;
+        this.leftY = -power;
+        this.leftX = 0;
+        this.rightX = 0;
+        this.xPos = 0;
+        this.yPos = inchesToEncoderTicks(distance);;
+        //System.out.println(xPos);
 
     }
 
@@ -31,7 +31,8 @@ public class EncoderTurnDriveCommand extends Command {
     // Called once when the command is initially schedule
 
     public void init() {
-
+        drive.parallelEncoder.resetEncoder();
+        drive.perpendicularEncoder.resetEncoder();
     }
     public static double encoderTicksToInches(double ticks) {
 
@@ -44,24 +45,34 @@ public class EncoderTurnDriveCommand extends Command {
         return ticksPerInch * inches;
         //return inches/(WHEEL_RADIUS*2*TICKS_PER_REV*Math.PI);
     }
+    public double getxPos() {
+        return xPos;
+    }
+    public double getyPos() {
+        return yPos;
+    }
+
 
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        drive.mecanum(0, 0, rightX);
+        drive.automecanum(leftY, leftX, rightX);
 
     }
 
     // Called once after isFinished() returns true
     @Override
     public void end() {
-
+        drive.parallelEncoder.resetEncoder();
+        drive.perpendicularEncoder.resetEncoder();
     }
 
     // Specifies whether or not the command has finished
     // Returning true causes execute() to be called once
     @Override
     public boolean isFinished() {
-        return drive.imu.getYaw()>degrees;
+        return drive.parallelEncoder.getCurrentPosition()>Math.abs(yPos);
+        //(Math.abs(Math.abs(drive.perpendicularEncoder.getCurrentPosition())-Math.abs(xPos))<500);
+            //&& (Math.abs(Math.abs(drive.parallelEncoder.getCurrentPosition())-Math.abs(yPos))<500);
     }
 }

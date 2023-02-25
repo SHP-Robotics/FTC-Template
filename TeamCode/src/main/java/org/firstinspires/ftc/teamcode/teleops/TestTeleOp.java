@@ -4,13 +4,9 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.commands.EncoderDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.MoveArmCommand;
-import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
@@ -62,14 +58,6 @@ private ArmSubsystem.State topState;
 
 
         // Add anything that needs to be run a single time when the OpMode starts
-        CommandScheduler myCommand = CommandScheduler.getInstance();
-        myCommand.scheduleCommand(
-                new RunCommand(() -> {
-                    claw.setState(ClawSubsystem.State.CLOSED);
-                })
-                        .then (new WaitCommand(2))
-                        .then(new EncoderDriveCommand(drive,0, 0.3, 0, 20, 0))
-        );
 
     }
 

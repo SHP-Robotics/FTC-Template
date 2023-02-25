@@ -3,24 +3,14 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.commands.EncoderDriveCommand;
+import org.firstinspires.ftc.teamcode.AAAInsurance.EncoderStraightDriveCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.commands.DriveCommand;
-import org.firstinspires.ftc.teamcode.commands.FindAprilTagCommand;
-import org.firstinspires.ftc.teamcode.commands.InteractWithConeCommand;
-import org.firstinspires.ftc.teamcode.commands.MoveArmCommand;
-import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
-import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous(preselectTeleOp = "TestTeleOp")
 public class CommandBasedAuto extends BaseRobot {
@@ -47,7 +37,7 @@ public class CommandBasedAuto extends BaseRobot {
                         .then(new RunCommand(() -> {
                             arm.setState(ArmSubsystem.State.TOP);
                         }))
-                        .then(new EncoderDriveCommand(drive,0.3, 0, 0, 0, 60))
+                        .then(new EncoderStraightDriveCommand(drive,0.3, 60))
         );
 
 

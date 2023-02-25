@@ -43,7 +43,7 @@ public final class Constants {
         //TODO: Tune G
         //TODO: TUNE SLIDE CONSTANTS
         public static final double K_SLIDE_TOP = 3930 - OFFSET;
-        public static final double K_SLIDE_MIDDLE = 2750 - OFFSET;
+        public static final double K_SLIDE_MIDDLE = 2850 - OFFSET;
         public static final double K_SLIDE_SHORT = 1600 - OFFSET;
         public static final double K_SLIDE_CARRY = 250 - OFFSET;
         public static final double K_SLIDE_BOTTOM = 10 - OFFSET;
@@ -52,7 +52,7 @@ public final class Constants {
 
     public static final class Scoop {
         public static final String K_CLAW_NAME = "claw";
-        public static final double K_OUT = 0.375;
+        public static final double K_OUT = 0.35;
         public static final double K_IN = 0;
     }
 }
