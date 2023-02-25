@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.shplib.hardware.sensors;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.roadrunner.util.AxesSigns;
 import org.firstinspires.ftc.teamcode.roadrunner.util.BNO055IMUUtil;
@@ -34,5 +35,9 @@ public class SHPIMU {
     public double getYaw() {
         return imu.getAngularOrientation().firstAngle;
     }
+    public double getAutoYaw() {
+        return imu.getAngularOrientation().angleUnit.getUnnormalized().toDegrees(-getYaw());
+    }
+
 
 }

@@ -48,7 +48,13 @@ public class EncoderTurnDriveCommand extends Command {
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        drive.automecanum(0, 0, rightX);
+        if (-drive.imu.getAutoYaw()<0.2*degrees)
+            drive.automecanum(0, 0, rightX);
+        else if (-drive.imu.getAutoYaw()<0.8*degrees)
+            drive.automecanum(0, 0, 2*rightX);
+        else
+            drive.automecanum(0, 0, rightX);
+
 
     }
 
@@ -63,6 +69,6 @@ public class EncoderTurnDriveCommand extends Command {
     //TODO: IMU IS WEIRD VALUES ARHGILSHDG BIOSAalifuhdlafbohub
     @Override
     public boolean isFinished() {
-        return Math.toDegrees(-drive.imu.getYaw())>degrees;
+        return Math.toDegrees(-drive.imu.getAutoYaw())>degrees;
     }
 }
