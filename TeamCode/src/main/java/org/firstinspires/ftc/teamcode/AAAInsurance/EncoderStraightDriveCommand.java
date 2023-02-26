@@ -14,11 +14,11 @@ public class EncoderStraightDriveCommand extends Command {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
 
-    public EncoderStraightDriveCommand(DriveSubsystem drive, double power, double distance) {
+    public EncoderStraightDriveCommand(DriveSubsystem drive, double distance) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
-        this.leftY = -power;
+        this.leftY = -0.2;
         this.leftX = 0;
         this.rightX = 0;
         this.xPos = 0;
@@ -56,7 +56,14 @@ public class EncoderStraightDriveCommand extends Command {
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        drive.automecanum(leftY, leftX, rightX);
+        if (drive.parallelEncoder.getCurrentPosition()<0.2*Math.abs(yPos))
+            drive.automecanum(leftY, leftX, rightX);
+        else if (drive.parallelEncoder.getCurrentPosition()<0.8*Math.abs(yPos))
+            drive.automecanum(1.5*leftY, leftX, rightX);
+        else
+            drive.automecanum(leftY, leftX, rightX);
+
+       // drive.automecanum(leftY, leftX, rightX);
 
     }
 

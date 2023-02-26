@@ -37,7 +37,7 @@ public class CommandBasedAuto extends BaseRobot {
                         .then(new RunCommand(() -> {
                             arm.setState(ArmSubsystem.State.TOP);
                         }))
-                        .then(new EncoderStraightDriveCommand(drive,0.3, 60))
+                        .then(new EncoderStraightDriveCommand(drive, 60))
         );
 
 

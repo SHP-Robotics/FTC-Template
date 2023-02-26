@@ -58,7 +58,7 @@ public class AAATurnTest extends BaseRobot {
                 new RunCommand(() -> {
                     claw.setState(ClawSubsystem.State.CLOSED);
                 })
-                        .then(new EncoderTurnDriveCommand(drive,0.2,179))
+                        .then(new EncoderTurnDriveCommand(drive,"cw",179))
         );
 
 

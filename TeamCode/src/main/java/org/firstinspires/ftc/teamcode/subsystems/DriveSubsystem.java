@@ -59,7 +59,7 @@ public class DriveSubsystem extends Subsystem {
 
 
 
-        drive.mecanum(-bias*vector.getY(), bias*vector.getX(), bias*0.8*rightX); // field oriented
+        drive.mecanum(bias*vector.getY(), bias*vector.getX(), bias*0.8*rightX); // field oriented
     }
     public void automecanum(double leftY, double leftX, double rightX) {
         vert = leftY;

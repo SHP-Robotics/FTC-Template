@@ -33,7 +33,7 @@ private ArmSubsystem.State topState;
         drive.setDefaultCommand(
                 new RunCommand(
                         () ->
-                                drive.mecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x)
+                                drive.mecanum(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x)
                 )
         );
 
@@ -70,6 +70,8 @@ private ArmSubsystem.State topState;
         telemetry.addData("max speed: ", maxSpeed);
         telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
         telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());
+        telemetry.addData("integrated heading", drive.imu.getIntegratedHeading());
+//        telemetry.addData("integrated heading + 180", Math.toDegrees(drive.imu.getIntegratedHeading())+180);
 
         //telemetry.addData("SLIDE ENCODER: ", arm.slide.getPosition(MotorUnit.TICKS));
         //telemetry.addData("POWER: ", arm.slide.getPower());

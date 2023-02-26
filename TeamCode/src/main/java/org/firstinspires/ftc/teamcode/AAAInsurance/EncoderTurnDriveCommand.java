@@ -16,13 +16,17 @@ public class EncoderTurnDriveCommand extends Command {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
 
-    public EncoderTurnDriveCommand(DriveSubsystem drive, double power, double degrees) {
+    public EncoderTurnDriveCommand(DriveSubsystem drive, String direction, double degrees) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
         this.leftY = 0;
         this.leftX = 0;
-        this.rightX = power;
+        //TODO: switch cc/cw input to based on +/- of degrees where positive is clockwise
+        if(direction.equals("cw"))
+            this.rightX = 0.1;
+        else
+            this.rightX = -0.1;
         this.degrees = degrees;
 
     }
@@ -48,9 +52,9 @@ public class EncoderTurnDriveCommand extends Command {
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        if (drive.imu.getYaw()<0.2*degrees)
+        if (drive.imu.getIntegratedHeading()<0.2*degrees)
             drive.automecanum(0, 0, rightX);
-        else if (drive.imu.getYaw()<0.8*degrees)
+        else if (drive.imu.getIntegratedHeading()<0.8*degrees)
             drive.automecanum(0, 0, 2*rightX);
         else
             drive.automecanum(0, 0, rightX);
@@ -69,6 +73,10 @@ public class EncoderTurnDriveCommand extends Command {
     //TODO: IMU IS WEIRD VALUES ARHGILSHDG BIOSAalifuhdlafbohub
     @Override
     public boolean isFinished() {
-        return Math.toDegrees(-drive.imu.getAutoYaw())>degrees;
+        if(rightX>0) //>0 means turning CW
+            return Math.toDegrees(drive.imu.getIntegratedHeading())>degrees;
+        else //turning CW
+            return Math.toDegrees(drive.imu.getIntegratedHeading())<degrees;
+
     }
 }

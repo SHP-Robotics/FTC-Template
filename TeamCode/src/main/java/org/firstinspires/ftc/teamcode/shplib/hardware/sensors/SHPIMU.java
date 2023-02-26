@@ -49,8 +49,8 @@ public class SHPIMU {
  */
         private double previousHeading = 0; //Outside of method
         private double integratedHeading = 0;
-        private double getIntegratedHeading() {
-        double currentHeading = imu.getAngularOrientation().firstAngle;
+        public double getIntegratedHeading() {
+        double currentHeading = Math.toDegrees(-imu.getAngularOrientation().firstAngle);
         double deltaHeading = currentHeading - previousHeading;
 
         if (deltaHeading < -180) {
