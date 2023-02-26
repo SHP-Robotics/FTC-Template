@@ -40,4 +40,31 @@ public class SHPIMU {
     }
 
 
+
+/**
+ * This method returns a value of the Z axis of the REV Expansion Hub IMU.
+ * It transforms the value from (-180, 180) to (-inf, inf).
+ * This code was taken and modified from https://ftcforum.usfirst.org/forum/ftc-technology/53477-rev-imu-questions?p=53481#post53481.
+ * @return The integrated heading on the interval (-inf, inf).
+ */
+        private double previousHeading = 0; //Outside of method
+        private double integratedHeading = 0;
+        private double getIntegratedHeading() {
+        double currentHeading = imu.getAngularOrientation().firstAngle;
+        double deltaHeading = currentHeading - previousHeading;
+
+        if (deltaHeading < -180) {
+            deltaHeading += 360;
+        } else if (deltaHeading >= 180) {
+            deltaHeading -= 360;
+        }
+
+        integratedHeading += deltaHeading;
+        previousHeading = currentHeading;
+
+        return integratedHeading;
+    }
+
+
+
 }

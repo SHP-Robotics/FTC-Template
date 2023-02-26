@@ -48,9 +48,9 @@ public class EncoderTurnDriveCommand extends Command {
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        if (-drive.imu.getAutoYaw()<0.2*degrees)
+        if (drive.imu.getYaw()<0.2*degrees)
             drive.automecanum(0, 0, rightX);
-        else if (-drive.imu.getAutoYaw()<0.8*degrees)
+        else if (drive.imu.getYaw()<0.8*degrees)
             drive.automecanum(0, 0, 2*rightX);
         else
             drive.automecanum(0, 0, rightX);

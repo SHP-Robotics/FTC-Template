@@ -45,13 +45,6 @@ public class EncoderStrafeDriveCommand extends Command {
         double c = (((WHEEL_RADIUS*2)*Math.PI));
         double ticksPerInch = TICKS_PER_REV/c;
         return ticksPerInch * inches;
-        //return inches/(WHEEL_RADIUS*2*TICKS_PER_REV*Math.PI);
-    }
-    public double getxPos() {
-        return xPos;
-    }
-    public double getyPos() {
-        return yPos;
     }
 
 
