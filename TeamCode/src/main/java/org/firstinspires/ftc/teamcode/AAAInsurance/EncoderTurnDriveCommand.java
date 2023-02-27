@@ -24,9 +24,9 @@ public class EncoderTurnDriveCommand extends Command {
         this.leftX = 0;
         //TODO: switch cc/cw input to based on +/- of degrees where positive is clockwise
         if(direction.equals("cw"))
-            this.rightX = 0.1;
+            this.rightX = 0.2;
         else
-            this.rightX = -0.1;
+            this.rightX = -0.2;
         this.degrees = degrees;
 
     }
@@ -54,10 +54,16 @@ public class EncoderTurnDriveCommand extends Command {
     public void execute() {
         if (drive.imu.getIntegratedHeading()<0.2*degrees)
             drive.automecanum(0, 0, rightX);
-        else if (drive.imu.getIntegratedHeading()<0.8*degrees)
+        else if (drive.imu.getIntegratedHeading()<0.4*degrees)
+            drive.automecanum(0, 0, 1.5*rightX);
+        else if (drive.imu.getIntegratedHeading()<0.6*degrees)
             drive.automecanum(0, 0, 2*rightX);
-        else
+        else if (drive.imu.getIntegratedHeading()<0.8*degrees)
+            drive.automecanum(0, 0, 1.5*rightX);
+        else if (drive.imu.getIntegratedHeading()<0.9*degrees)
             drive.automecanum(0, 0, rightX);
+        else
+            drive.automecanum(0, 0, 0.75*rightX);
 
 
     }
@@ -74,9 +80,9 @@ public class EncoderTurnDriveCommand extends Command {
     @Override
     public boolean isFinished() {
         if(rightX>0) //>0 means turning CW
-            return Math.toDegrees(drive.imu.getIntegratedHeading())>degrees;
-        else //turning CW
-            return Math.toDegrees(drive.imu.getIntegratedHeading())<degrees;
+            return drive.imu.getIntegratedHeading()>degrees;
+        else //turning CC
+            return drive.imu.getIntegratedHeading()<degrees;
 
     }
 }

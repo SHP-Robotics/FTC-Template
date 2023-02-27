@@ -14,11 +14,14 @@ public class EncoderStraightDriveCommand extends Command {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
 
-    public EncoderStraightDriveCommand(DriveSubsystem drive, double distance) {
+    public EncoderStraightDriveCommand(DriveSubsystem drive, String direction, double distance) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
-        this.leftY = -0.2;
+        if(direction.equals("forward"))
+            this.leftY = -0.3;
+        else
+            this.leftY = 0.3;
         this.leftX = 0;
         this.rightX = 0;
         this.xPos = 0;

@@ -15,12 +15,15 @@ public class EncoderStrafeDriveCommand extends Command {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
 
-    public EncoderStrafeDriveCommand(DriveSubsystem drive, double power, double distance, boolean robot) {
+    public EncoderStrafeDriveCommand(DriveSubsystem drive, String direction, double distance, boolean robot) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(drive);
         this.drive = drive;
         this.leftY = 0;
-        this.leftX = power;
+        if(direction.equals("left"))
+            this.leftX = -0.3;
+        else
+            this.leftX = 0.3;
         this.rightX = 0;
         this.xPos = inchesToEncoderTicks(distance);
         this.yPos = 0;

@@ -58,7 +58,7 @@ public class AAATurnTest extends BaseRobot {
                 new RunCommand(() -> {
                     claw.setState(ClawSubsystem.State.CLOSED);
                 })
-                        .then(new EncoderTurnDriveCommand(drive,"cw",179))
+                        .then(new EncoderTurnDriveCommand(drive,"cw",180))
         );
 
 
@@ -69,7 +69,7 @@ public class AAATurnTest extends BaseRobot {
         super.loop();
         telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
         telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());
-        telemetry.addData("IMU", Math.toDegrees(-drive.imu.getYaw()));
+        telemetry.addData("IMU", drive.imu.getIntegratedHeading());
 
     }
 }
