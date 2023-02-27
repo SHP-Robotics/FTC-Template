@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.AAAInsurance;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
@@ -43,6 +44,7 @@ public class AAATurnTest extends BaseRobot {
 
         new RunCommand(( () -> {arm.setState(ArmSubsystem.State.BOTTOM);}));
 
+
     }
     @Override
     public void start() {
@@ -59,6 +61,7 @@ public class AAATurnTest extends BaseRobot {
                     claw.setState(ClawSubsystem.State.CLOSED);
                 })
                         .then(new EncoderTurnDriveCommand(drive,"cw",180))
+                        .then(new EncoderTurnDriveCommand(drive,"ccw",-90))
         );
 
 

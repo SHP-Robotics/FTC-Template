@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class DriveSubsystem extends Subsystem {
     //    private final RRMecanumDrive rr;
-    private final SHPMecanumDrive drive;
+    public final SHPMecanumDrive drive;
     public final SHPIMU imu;
     public final Encoder parallelEncoder, perpendicularEncoder;
 

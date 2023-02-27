@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.AAAInsurance;
 
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
@@ -55,13 +57,7 @@ public class EncoderStrafeDriveCommand extends Command {
     @Override
     public void execute() {
         if (robot) {
-            //drive.normalmecanum(0, leftX, 0);
-            if (drive.perpendicularEncoder.getCurrentPosition() < 0.2 * Math.abs(xPos))
-                drive.normalmecanum(leftY, leftX, 0);
-            else if (drive.perpendicularEncoder.getCurrentPosition() < 0.8 * Math.abs(xPos))
-                drive.normalmecanum(leftY, leftX*2, 0);
-            else
-                drive.normalmecanum(leftY, leftX,0 );
+                drive.normalmecanum(0, leftX,0 );
         }
         else {
 //            drive.automecanum(0, leftX, 0);
@@ -71,6 +67,41 @@ public class EncoderStrafeDriveCommand extends Command {
                 drive.automecanum(0, leftX*2, 0);
             else
                 drive.automecanum(0, leftX,0 );
+        }
+
+    }
+    double difference = 0;
+    double percentage = 0;
+    //@Override
+    public void executeAttempt() {
+
+        if (robot) {
+            //drive.normalmecanum(0, leftX, 0);
+            if (drive.perpendicularEncoder.getCurrentPosition() < 0.2 * Math.abs(xPos))
+                drive.normalmecanum(0, leftX, 0);
+            else if (drive.perpendicularEncoder.getCurrentPosition() < 0.8 * Math.abs(xPos))
+                drive.normalmecanum(0, leftX*2, 0);
+            else
+                drive.normalmecanum(0, leftX,0 );
+        }
+        else {
+            difference = Math.abs(xPos - drive.perpendicularEncoder.getCurrentPosition());
+            if (difference<0.25*Math.abs(xPos)) {
+                drive.automecanum(0, 0.4, 0);
+            }
+            else if (difference<0.5*Math.abs(xPos)) {
+                percentage = (difference/(Math.abs(xPos)/2));
+                percentage = Range.clip(percentage, 0.3, 0.8);
+                drive.automecanum(percentage, 0, 0);
+            }
+            else if (difference<0.75*Math.abs(xPos)) {
+
+                percentage = (Math.abs(difference-Math.abs(xPos)))/(Math.abs(xPos)/2);
+                percentage = Range.clip(percentage, 0.3, 0.8);
+                drive.automecanum(percentage, 0,  0);
+            }
+            else
+                drive.automecanum(0.4, 0, 0);
         }
 
     }

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
+import org.firstinspires.ftc.teamcode.commands.DriveCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
@@ -66,12 +67,15 @@ public class AAA1plus5Mid extends BaseRobot {
                         .then(new RunCommand(()->{
                             arm.setState(ArmSubsystem.State.MIDDLE);
                         }))
-                        .then(new EncoderStraightDriveCommand(drive,"forward",38))
+                        .then(new EncoderStraightDriveCommand(drive,"forward",38.5))
                         .then(new EncoderStrafeDriveCommand(drive,"left",  2, false))
+                        .then (new WaitCommand(0.5))
                         .then(new RunCommand(()->{
                             claw.setState(ClawSubsystem.State.OPEN);
                         }))
+                        .then (new WaitCommand(0.5))
                         .then(new EncoderStrafeDriveCommand(drive,"right",  2, false))
+                        .then (new WaitCommand(0.5))
                         .then(new RunCommand(()->{
                             arm.setState(ArmSubsystem.State.BOTTOM);
                         }))
@@ -83,7 +87,7 @@ public class AAA1plus5Mid extends BaseRobot {
                             arm.setState(ArmSubsystem.State.STACKED_CONES);
                         }))
                         .then (new WaitCommand(0.5))
-                        .then(new EncoderStrafeDriveCommand(drive,"right",  19, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"right",  19.25, false))
                         .then(new WaitCommand(1.5))
                         .then(new RunCommand(()->{
                             claw.setState(ClawSubsystem.State.CLOSED);
@@ -92,20 +96,36 @@ public class AAA1plus5Mid extends BaseRobot {
                         .then(new RunCommand(()->{
                             arm.setState(ArmSubsystem.State.MIDDLE);
                         }))
-                        .then(new WaitCommand(1))
-                        .then(new EncoderStrafeDriveCommand(drive,"left",  31.5, false))
-                        .then(new WaitCommand(1))
-                        .then(new EncoderTurnDriveCommand(drive, "cw",270))
-                        .then(new WaitCommand(1.5))
-                        .then(new EncoderStrafeDriveCommand(drive,"left",  1, true))
-                        .then(new RunCommand(()->{
-                            claw.setState(ClawSubsystem.State.OPEN);
-                        }))
 
+                        .then(new EncoderStrafeDriveCommand(drive,"left",  35, false))
+                        .then(new WaitCommand(1))
+                        .then(new EncoderTurnDriveCommand(drive, "cw",273))
+                        .then(new WaitCommand(1.5))
+                        .then (new DriveCommand(drive, -0.2, 0, 0.0, 1, true))
+                        //.then(new EncoderStrafeDriveCommand(drive,"left",  1, true))
+
+                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
+                        .then(new DriveCommand(drive, 0.2, 0, 0.0, 1, true))
+                        //.then(new RunCommand(()->{arm.incrementConeLevelDown();}))
+                        .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.STACKED_CONES);}))
+                        .then(new EncoderTurnDriveCommand(drive, "ccw",-180))
+                        .then(new WaitCommand(0.5))
+                        .then(new EncoderStrafeDriveCommand(drive,"right",  33, false))
+                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.CLOSED);}))
+                        .then(new WaitCommand(0.5))
+                        .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.MIDDLE);}))
+                        .then(new EncoderStrafeDriveCommand(drive,"left",  35, false))
+                        .then(new EncoderTurnDriveCommand(drive, "cw",270))
+                        .then (new DriveCommand(drive, -0.2, 0, 0.0, 1, true))
+                        //.then(new EncoderStrafeDriveCommand(drive,"left",  1, true))
+
+                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
+                        .then(new DriveCommand(drive, 0.2, 0, 0.0, 1, true))
 
 
 
         );
+
 
 
     }
@@ -113,6 +133,7 @@ public class AAA1plus5Mid extends BaseRobot {
     @Override
     public void loop() {
         super.loop();
+        telemetry.addData("IMU", drive.imu.getIntegratedHeading());
         telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
         telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());
     }

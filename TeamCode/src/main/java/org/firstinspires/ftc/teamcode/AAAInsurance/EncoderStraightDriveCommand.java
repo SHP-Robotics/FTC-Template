@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.AAAInsurance;
 
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
@@ -70,6 +72,32 @@ public class EncoderStraightDriveCommand extends Command {
 
     }
 
+    double difference = 0;
+    double percentage = 0;
+    //@Override
+    public void executeAttempt() {
+        difference = Math.abs(yPos - drive.parallelEncoder.getCurrentPosition());
+        if (difference<0.25*Math.abs(yPos)) {
+            drive.automecanum(0.2, 0, 0);
+        }
+        else if (difference<0.5*Math.abs(yPos)) {
+            percentage = (difference/(Math.abs(yPos)/2));
+            percentage = Range.clip(percentage, 0.2, 0.8);
+            drive.automecanum(percentage, 0, 0);
+        }
+        else if (difference<0.75*Math.abs(yPos)) {
+
+            percentage = (Math.abs(difference-Math.abs(yPos)))/(Math.abs(yPos)/2);
+            percentage = Range.clip(percentage, 0.2, 0.8);
+            drive.automecanum(percentage, 0,  0);
+        }
+        else
+            drive.automecanum(0.2, 0, 0);
+
+        // drive.automecanum(leftY, leftX, rightX);
+
+    }
+
     // Called once after isFinished() returns true
     @Override
     public void end() {
@@ -82,7 +110,6 @@ public class EncoderStraightDriveCommand extends Command {
     @Override
     public boolean isFinished() {
         return drive.parallelEncoder.getCurrentPosition()>Math.abs(yPos);
-        //(Math.abs(Math.abs(drive.perpendicularEncoder.getCurrentPosition())-Math.abs(xPos))<500);
-            //&& (Math.abs(Math.abs(drive.parallelEncoder.getCurrentPosition())-Math.abs(yPos))<500);
+
     }
 }
