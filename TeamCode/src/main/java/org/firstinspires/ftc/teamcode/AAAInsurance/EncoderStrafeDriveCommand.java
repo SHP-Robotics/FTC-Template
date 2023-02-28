@@ -23,11 +23,11 @@ public class EncoderStrafeDriveCommand extends Command {
         this.drive = drive;
         this.leftY = 0;
         if(direction.equals("left"))
-            this.leftX = -0.3;
+            this.leftX = -0.4;
         else
-            this.leftX = 0.3;
+            this.leftX = 0.4;
         this.rightX = 0;
-        this.xPos = inchesToEncoderTicks(distance);
+        this.xPos = inchesToEncoderTicks(distance*0.9);
         this.yPos = 0;
         this.robot = robot;
         //System.out.println(xPos);
@@ -56,10 +56,8 @@ public class EncoderStrafeDriveCommand extends Command {
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        if (robot) {
-                drive.normalmecanum(0, leftX,0 );
-        }
-        else {
+
+
 //            drive.automecanum(0, leftX, 0);
             if (drive.perpendicularEncoder.getCurrentPosition() < 0.2 * Math.abs(xPos))
                 drive.automecanum(0, leftX, 0);
@@ -67,7 +65,7 @@ public class EncoderStrafeDriveCommand extends Command {
                 drive.automecanum(0, leftX*2, 0);
             else
                 drive.automecanum(0, leftX,0 );
-        }
+
 
     }
     double difference = 0;

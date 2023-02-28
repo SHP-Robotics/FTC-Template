@@ -37,6 +37,7 @@ public class BaseRobot extends OpMode {
         // Configures universal clock and scheduler - DO NOT DELETE!
         configure();
 
+
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
         vision = new VisionSubsystem(hardwareMap);
@@ -44,6 +45,11 @@ public class BaseRobot extends OpMode {
         claw = new ClawSubsystem(hardwareMap);
 //        scoop = new ScoopSubsystem(hardwareMap);
 //        intake = new SHPMotor(hardwareMap, "intake");
+        try {
+            CommandScheduler.getInstance().run();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
     }

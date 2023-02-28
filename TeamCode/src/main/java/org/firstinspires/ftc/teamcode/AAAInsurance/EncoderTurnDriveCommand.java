@@ -28,6 +28,7 @@ public class EncoderTurnDriveCommand extends Command {
         this.leftX = 0;
         this.degrees = degrees;
         this.direction = direction;
+        initialHeading = drive.imu.getIntegratedHeading();
         //TODO: switch cc/cw input to based on +/- of degrees where positive is clockwise
 
         if(direction.equals("cw")) {
@@ -39,7 +40,7 @@ public class EncoderTurnDriveCommand extends Command {
             fullDegrees = drive.imu.getIntegratedHeading() - degrees;
         }
 
-        initialHeading = drive.imu.getIntegratedHeading();
+
 
 
 

@@ -62,7 +62,8 @@ public class AAATestingAuto extends BaseRobot {
                         .then(new RunCommand(() -> {
                             arm.setState(ArmSubsystem.State.CARRYING);
                         }))
-                        .then(new EncoderStraightDriveCommand(drive,"forward", 20))
+                        .then(new EncoderStrafeDriveCommand(drive,"left", 20, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"right", 20, false))
 
         );
 
