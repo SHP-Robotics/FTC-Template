@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
+import org.firstinspires.ftc.teamcode.commands.DriveCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
@@ -64,6 +65,8 @@ public class AAATestingAuto extends BaseRobot {
                         }))
                         .then(new EncoderStrafeDriveCommand(drive,"left", 20, false))
                         .then(new EncoderStrafeDriveCommand(drive,"right", 20, false))
+                        .then (new WaitCommand(0.5))
+                        .then(new DriveCommand(drive, 0, 0.5, 0.5, 2, false))
 
         );
 

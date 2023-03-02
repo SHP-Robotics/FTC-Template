@@ -23,9 +23,9 @@ public class EncoderStrafeDriveCommand extends Command {
         this.drive = drive;
         this.leftY = 0;
         if(direction.equals("left"))
-            this.leftX = -0.4;
+            this.leftX = -0.5;
         else
-            this.leftX = 0.4;
+            this.leftX = 0.5;
         this.rightX = 0;
         this.xPos = inchesToEncoderTicks(distance*0.9);
         this.yPos = 0;
@@ -64,7 +64,7 @@ public class EncoderStrafeDriveCommand extends Command {
             else if (drive.perpendicularEncoder.getCurrentPosition() < 0.8 * Math.abs(xPos))
                 drive.automecanum(0, leftX*2, 0);
             else
-                drive.automecanum(0, leftX,0 );
+                drive.automecanum(0, leftX,0);
 
 
     }

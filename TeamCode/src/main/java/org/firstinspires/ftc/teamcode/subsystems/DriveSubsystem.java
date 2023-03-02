@@ -83,10 +83,15 @@ public class DriveSubsystem extends Subsystem {
     public void normalmecanum(double leftY, double leftX, double rightX) {
         drive.mecanum(leftY, leftX, rightX); // robot oriented
     }
+    public static double encoderTicksToInches(double ticks) {
+
+        return 1 * 2 * Math.PI * ticks / 8192;
+    }
 
     @Override
     public void periodic(Telemetry telemetry) {
-//        telemetry.addData("heading: ", Math.toDegrees(imu.getYaw()));
+    telemetry.addData("Y Ticks", encoderTicksToInches(parallelEncoder.getCurrentPosition()));
+    telemetry.addData("X Ticks", encoderTicksToInches(perpendicularEncoder.getCurrentPosition()));
 
     }
 
