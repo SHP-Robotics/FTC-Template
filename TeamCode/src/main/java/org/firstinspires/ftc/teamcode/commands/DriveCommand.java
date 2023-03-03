@@ -9,7 +9,7 @@ public class DriveCommand extends Command {
     private double startTime;
     private double endTime;
     double leftY; double leftX; double rightX; double time;
-    boolean robot = true;
+    boolean robot;
 
     public DriveCommand(DriveSubsystem drive, double leftY, double leftX, double rightX, double time, boolean robot) {
         // You MUST call the parent class constructor and pass through any subsystems you use

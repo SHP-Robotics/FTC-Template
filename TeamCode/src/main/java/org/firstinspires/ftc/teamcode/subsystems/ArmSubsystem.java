@@ -85,7 +85,7 @@ public class ArmSubsystem extends Subsystem {
 
 
     public double getDriveBias(boolean clawOpen) {
-        if(getState() != State.BOTTOM && getState() != State.CARRYING){
+        if(getState() != State.BOTTOM && getState() != State.CARRYING && getState() != State.STACKED_CONES){
             if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.925)
                 return 0.2;
             else if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.5)
