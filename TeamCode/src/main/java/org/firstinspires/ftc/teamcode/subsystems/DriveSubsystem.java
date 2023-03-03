@@ -19,7 +19,7 @@ public class DriveSubsystem extends Subsystem {
     private final SHPMecanumDrive drive;
 //    private final SHPIMU imu;
 
-    private double bias = 1.0; // will always be between kMinimumBias and 1.0
+    private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0
 
     public DriveSubsystem(HardwareMap hardwareMap) {
         drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
@@ -42,7 +42,7 @@ public class DriveSubsystem extends Subsystem {
     }
 
     public void setDriveBias(double driveBias) {
-        bias = Range.clip(driveBias, kMinimumBias, 1.0);
+        bias = Range.clip(driveBias, kMinimumBias, kMaximumBias);
     }
 
     public void enablePositionPID() {
