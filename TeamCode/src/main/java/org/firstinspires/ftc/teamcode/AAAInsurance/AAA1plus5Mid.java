@@ -75,18 +75,16 @@ public class AAA1plus5Mid extends BaseRobot {
                         .then(new RunCommand(()->{
                             arm.setState(ArmSubsystem.State.MIDDLE);
                         }))
+                        //DROP FIRST CONE
                         .then(new EncoderStraightDriveCommand(drive,"forward",38.5))
                         .then(new EncoderStrafeDriveCommand(drive,"left",  1, false))
                         .then (new WaitCommand(0.5))
-                        .then(new RunCommand(()->{
-                            claw.setState(ClawSubsystem.State.OPEN);
-                        }))
+                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
                         .then (new WaitCommand(0.5))
                         .then(new EncoderStrafeDriveCommand(drive,"right",  1, false))
                         .then (new WaitCommand(0.5))
-                        .then(new RunCommand(()->{
-                            arm.setState(ArmSubsystem.State.BOTTOM);
-                        }))
+                        .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.BOTTOM);}))
+                        // FORWARD AND TURN TOWARD STACKED CONE 1
                         .then (new WaitCommand(0.5))
                         .then(new EncoderStraightDriveCommand(drive, "forward", 12))
                         .then(new WaitCommand(0.5))
@@ -94,8 +92,9 @@ public class AAA1plus5Mid extends BaseRobot {
                         .then(new RunCommand(()->{
                             arm.setState(ArmSubsystem.State.STACKED_CONES);
                         }))
+                        //GO TO PICK UP STACKED CONES
                         .then (new WaitCommand(0.5))
-                        .then(new EncoderStrafeDriveCommand(drive,"right",  20, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"right",  21.5, false))
                         .then(new WaitCommand(1))
                         .then(new RunCommand(()->{
                             claw.setState(ClawSubsystem.State.CLOSED);
@@ -104,28 +103,31 @@ public class AAA1plus5Mid extends BaseRobot {
                         .then(new RunCommand(()->{
                             arm.setState(ArmSubsystem.State.MIDDLE);
                         }))
+                        //STRAFE BACK TOWARDS HIGH POLE TO DROP STACKED CONE 1
 
                         .then(new EncoderStrafeDriveCommand(drive,"left",  34, false))
                         .then(new WaitCommand(0.5))
                         .then(new EncoderTurnDriveCommand(drive, "cw",273))
                         .then(new WaitCommand(0.5))
+                        //DRIVE AND DROP
                         .then (new DriveCommand(drive, -0.25, 0, 0.0, strafeTime, true))
-                        //.then(new EncoderStrafeDriveCommand(drive,"left",  1, true))
-
                         .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
                         .then(new DriveCommand(drive, 0.25, 0, 0.0, strafeTime, true))
-                        //.then(new RunCommand(()->{arm.incrementConeLevelDown();}))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.STACKED_CONES);}))
-                        .then(new EncoderTurnDriveCommand(drive, "ccw",-180))
+
+                        //TURN BACK TOWARDS STACK FOR STACK CONE 2 and DRIVE RIGHT
+                        .then(new EncoderTurnDriveCommand(drive, "ccw",180))
                         .then(new WaitCommand(0.5))
-                        .then(new EncoderStrafeDriveCommand(drive,"right",  34, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"right",  35, false))
+                        .then(new WaitCommand(0.5))
                         .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.CLOSED);}))
-                        .then(new WaitCommand(1))
+                        .then(new WaitCommand(0.5))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.MIDDLE);}))
-                        .then(new EncoderStrafeDriveCommand(drive,"left",  31, false))
+
+                        //DRIVE BACK TOWARDS MIDDLE POLE TO DROP STACKED CONE 2
+                        .then(new EncoderStrafeDriveCommand(drive,"left",  34, false))
                         .then(new EncoderTurnDriveCommand(drive, "cw",270))
                         .then (new DriveCommand(drive, -0.25, 0, 0.0, strafeTime, true))
-                        //.then(new EncoderStrafeDriveCommand(drive,"left",  1, true))
 
                         .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
                         .then(new DriveCommand(drive, 0.25, 0, 0.0, strafeTime, true))

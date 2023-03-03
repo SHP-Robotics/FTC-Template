@@ -62,7 +62,7 @@ public class EncoderStrafeDriveCommand extends Command {
             if (drive.perpendicularEncoder.getCurrentPosition() < 0.2 * Math.abs(xPos))
                 drive.automecanum(0, leftX, 0);
             else if (drive.perpendicularEncoder.getCurrentPosition() < 0.8 * Math.abs(xPos))
-                drive.automecanum(0, leftX*2, 0);
+                drive.automecanum(0, leftX*1.5, 0);
             else
                 drive.automecanum(0, leftX,0);
 

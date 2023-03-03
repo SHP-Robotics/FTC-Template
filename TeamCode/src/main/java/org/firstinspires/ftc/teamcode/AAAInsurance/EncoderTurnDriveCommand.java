@@ -37,7 +37,7 @@ public class EncoderTurnDriveCommand extends Command {
         }
         else {
             this.rightX = -0.5;
-            fullDegrees = drive.imu.getIntegratedHeading() - degrees;
+            fullDegrees = -(drive.imu.getIntegratedHeading() - degrees);
         }
 
 
