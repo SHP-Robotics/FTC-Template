@@ -24,7 +24,8 @@ public class AAA1plus5Mid extends BaseRobot {
     private int desiredPosition;
     private double strafeTime = 0.25;
     private double parkTime = 1;
-    private double parkDistance = 0.6;
+    private double parkSpeed = 0.4;
+    private String parkDirection = "backward";
     private double maxSpeed;
     private ArmSubsystem.State topState;
     @Override
@@ -54,7 +55,9 @@ public class AAA1plus5Mid extends BaseRobot {
         myInitCommand.scheduleCommand(
                 new RunCommand(() -> {
                     claw.setState(ClawSubsystem.State.CLOSED);
-                }));
+                })
+                .then(new FindAprilTagCommand(vision))
+        );
 
     }
     @Override
@@ -71,8 +74,7 @@ public class AAA1plus5Mid extends BaseRobot {
                 new RunCommand(() -> {
                     claw.setState(ClawSubsystem.State.CLOSED);
                 })
-                        .then(new FindAprilTagCommand(vision))
-                        .then(new WaitCommand(1))
+                        .then(new WaitCommand(0.25))
                         .then(new RunCommand(() -> {
                             arm.setState(ArmSubsystem.State.CARRYING);
                         }))
@@ -83,15 +85,17 @@ public class AAA1plus5Mid extends BaseRobot {
                         //DROP FIRST CONE
                         .then(new EncoderStraightDriveCommand(drive,"forward",38.5))
                         .then(new EncoderStrafeDriveCommand(drive,"left",  .75, false))
-                        .then (new WaitCommand(0.5))
+                        .then (new WaitCommand(0.25))
                         .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
                         .then (new WaitCommand(0.5))
                         .then(new EncoderStrafeDriveCommand(drive,"right",  .75, false))
-                        .then (new WaitCommand(0.5))
+                        .then (new WaitCommand(0.25))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.BOTTOM);}))
                         // FORWARD AND TURN TOWARD STACKED CONE 1
                         .then (new WaitCommand(0.5))
-                        .then(new EncoderStraightDriveCommand(drive, "forward", 11))
+                        .then(new EncoderStraightDriveCommand(drive, "forward", 14))
+                        .then(new WaitCommand(0.5))
+                        .then(new EncoderStraightDriveCommand(drive, "backward", 1.5))
                         .then(new WaitCommand(0.5))
                         .then(new EncoderTurnDriveCommand(drive, "cw",180))
                         .then(new RunCommand(()->{
@@ -132,27 +136,33 @@ public class AAA1plus5Mid extends BaseRobot {
                         .then(new WaitCommand(0.5))
 
                         //DRIVE BACK TOWARDS MIDDLE POLE TO DROP STACKED CONE 2
-                        .then(new EncoderStrafeDriveCommand(drive,"left",  34, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"left",  33.5, false))
                         .then(new EncoderTurnDriveCommand(drive, "cw",270))
                         .then (new DriveCommand(drive, -0.25, 0, 0.0, strafeTime, true))
 
                         .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
-                        .then(new DriveCommand(drive, 0.25, 0, 0.0, strafeTime, true))
+                        .then(new DriveCommand(drive, 0.25, 0, 0.0, strafeTime+0.2, true))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.BOTTOM);}))
 
                         //PARK
                         .then(new RunCommand(() -> {
-                            if(vision.getTags().get(0).id == 13){
-                                parkTime = 1;
+                            if(vision.getTags().get(0).id == 12){
+                                parkTime = 0.6;
+                                parkSpeed = 0.6;
                             }else if (vision.getTags().get(0).id == 8){
-                                parkTime = 0.25;
+                                parkTime = 0.2;
+                                parkSpeed = 0.6;
+                            }else if (vision.getTags().get(0).id == 7){
+                                parkTime = 0.2;
+                                parkSpeed = 0.6;
                             }
                             else{
-                                parkTime = 0.25;
-                                parkDistance = -0.3;
+                                parkTime = 0.2;
+                                parkSpeed = 0.6;
                             }
                         }))
-                        .then(new DriveCommand(drive, 0, 0.6, 0.0, parkTime, true))
+                        .then(new DriveCommand(drive, 0, parkSpeed, 0.0, parkTime, true))
+
 
 
 

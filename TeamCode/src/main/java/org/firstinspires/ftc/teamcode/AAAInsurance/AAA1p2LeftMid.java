@@ -94,7 +94,7 @@ public class AAA1p2LeftMid extends BaseRobot {
                         }))
                         //GO TO PICK UP STACKED CONES
                         .then (new WaitCommand(0.5))
-                        .then(new EncoderStrafeDriveCommand(drive,"right",  21.5, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"left",  21.5, false))
                         .then(new WaitCommand(1))
                         .then(new RunCommand(()->{
                             claw.setState(ClawSubsystem.State.CLOSED);
@@ -105,7 +105,7 @@ public class AAA1p2LeftMid extends BaseRobot {
                         }))
                         //STRAFE BACK TOWARDS HIGH POLE TO DROP STACKED CONE 1
 
-                        .then(new EncoderStrafeDriveCommand(drive,"left",  34, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"right",  34, false))
                         .then(new WaitCommand(0.5))
                         .then(new EncoderTurnDriveCommand(drive, "ccw",90))
                         .then(new WaitCommand(0.5))
@@ -118,14 +118,14 @@ public class AAA1p2LeftMid extends BaseRobot {
                         //TURN BACK TOWARDS STACK FOR STACK CONE 2 and DRIVE RIGHT
                         .then(new EncoderTurnDriveCommand(drive, "ccw",180))
                         .then(new WaitCommand(0.5))
-                        .then(new EncoderStrafeDriveCommand(drive,"right",  35, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"left",  35, false))
                         .then(new WaitCommand(0.5))
                         .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.CLOSED);}))
                         .then(new WaitCommand(0.5))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.MIDDLE);}))
 
                         //DRIVE BACK TOWARDS MIDDLE POLE TO DROP STACKED CONE 2
-                        .then(new EncoderStrafeDriveCommand(drive,"left",  34, false))
+                        .then(new EncoderStrafeDriveCommand(drive,"right",  34, false))
                         .then(new EncoderTurnDriveCommand(drive, "cw",270))
                         .then (new DriveCommand(drive, -0.25, 0, 0.0, strafeTime, true))
 

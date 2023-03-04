@@ -43,7 +43,7 @@ public final class Constants {
         //TODO: Tune G
         //TODO: TUNE SLIDE CONSTANTS
         public static final double K_SLIDE_TOP = 3930 - OFFSET;
-        public static final double K_SLIDE_MIDDLE = 3000 - OFFSET;
+        public static final double K_SLIDE_MIDDLE = 2900 - OFFSET;
         public static final double K_SLIDE_SHORT = 1600 - OFFSET;
         public static final double K_SLIDE_CARRY = 250 - OFFSET;
         public static final double K_SLIDE_BOTTOM = 10 - OFFSET;
