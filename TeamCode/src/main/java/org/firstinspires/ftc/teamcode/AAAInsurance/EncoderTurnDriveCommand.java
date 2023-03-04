@@ -67,7 +67,7 @@ public class EncoderTurnDriveCommand extends Command {
     // Called repeatedly until isFinished() returns true
     //@Override
     public void executeAttempt() {
-        if (drive.imu.getIntegratedHeading()<0.2*degrees)
+        if (drive.imu.getIntegratedHeading()<0.1*degrees)
             drive.automecanum(0, 0, rightX);
         else if (drive.imu.getIntegratedHeading()<0.4*degrees)
             drive.automecanum(0, 0, 1.5*rightX);

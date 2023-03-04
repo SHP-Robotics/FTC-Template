@@ -109,7 +109,7 @@ public class EncoderStraightDriveCommand extends Command {
     // Returning true causes execute() to be called once
     @Override
     public boolean isFinished() {
-        return drive.parallelEncoder.getCurrentPosition()>Math.abs(yPos);
+        return Math.abs(drive.parallelEncoder.getCurrentPosition())>Math.abs(yPos);
 
     }
 }
