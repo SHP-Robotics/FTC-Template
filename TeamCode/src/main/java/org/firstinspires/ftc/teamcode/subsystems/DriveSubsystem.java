@@ -23,6 +23,7 @@ public class DriveSubsystem extends Subsystem {
 
     public DriveSubsystem(HardwareMap hardwareMap) {
         drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
+        drive.enableBuiltInVelocityControl();
 
         // Change logo direction and USB direction according to your hub orientation
         // Reference pictures: https://ftc-docs.firstinspires.org/programming_resources/imu/imu.html#orthogonal-mounting

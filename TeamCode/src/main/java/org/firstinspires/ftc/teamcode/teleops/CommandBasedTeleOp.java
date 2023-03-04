@@ -22,7 +22,7 @@ public class CommandBasedTeleOp extends BaseRobot {
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.mecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
+                        () -> drive.mecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x)
                 )
         );
     }
@@ -44,8 +44,12 @@ public class CommandBasedTeleOp extends BaseRobot {
 
         new Trigger(gamepad1.a, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
-            if (arm.clawClosed()) arm.openClaw();
-            else {
+            if (arm.clawClosed()) {
+                arm.openClaw();
+                if (arm.atHub()) {
+                    arm.setState(ArmSubsystem.State.BOTTOM);
+                }
+            } else {
                 arm.closeClaw();
                 CommandScheduler.getInstance().scheduleCommand(
                         new WaitCommand(0.5)
@@ -54,7 +58,6 @@ public class CommandBasedTeleOp extends BaseRobot {
                                     else arm.setState(ArmSubsystem.State.HUB);
                                 }))
                 );
-
             }
             debounce = Clock.now();
         }));

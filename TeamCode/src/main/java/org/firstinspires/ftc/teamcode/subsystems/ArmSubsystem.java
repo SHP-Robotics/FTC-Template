@@ -34,6 +34,8 @@ public class ArmSubsystem extends Subsystem {
     private final SHPMotor leftSlide;
     private final SHPMotor rightSlide;
 
+    private double clawPosition;
+
     private int stackIndex = 4;
 
     public enum State {
@@ -73,17 +75,19 @@ public class ArmSubsystem extends Subsystem {
     }
 
     public void openClaw() {
-        if (clawClosed()) claw.setPosition(kClawOpen);
+        claw.setPosition(kClawOpen);
+        clawPosition = kClawOpen;
         if (atStacks()) stackIndex++;
     }
 
     public void closeClaw() {
-        if (!clawClosed()) claw.setPosition(kClawClosed);
+        claw.setPosition(kClawClosed);
+        clawPosition = kClawClosed;
         if (atStacks() && stackIndex > 0) stackIndex--;
     }
 
     public boolean clawClosed() {
-        return claw.getPosition() == kClawClosed;
+        return clawPosition == kClawClosed;
     }
 
 //    public boolean isOverPole() {
@@ -92,6 +96,10 @@ public class ArmSubsystem extends Subsystem {
 
     public boolean atStacks() {
         return state == State.STACK;
+    }
+
+    public boolean atHub() {
+        return state == State.HUB;
     }
 
     public boolean atSetpoint() {
@@ -133,6 +141,7 @@ public class ArmSubsystem extends Subsystem {
 
     @Override
     public void periodic(Telemetry telemetry) {
+        telemetry.addData("Claw Position: ", claw.getPosition());
 //        telemetry.addData("Slide State: ", state.toString());
         telemetry.addData("Num Cones Stacked: ", stackIndex + 1);
         telemetry.addData("Left Slide Position: ", leftSlide.getPosition(MotorUnit.TICKS));

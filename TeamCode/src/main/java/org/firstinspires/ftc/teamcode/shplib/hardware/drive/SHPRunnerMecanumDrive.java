@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
-import org.firstinspires.ftc.teamcode.shplib.runner.Point;
+import org.firstinspires.ftc.teamcode.shplib.hardware.drive.localizer.Point;
 
 public class SHPRunnerMecanumDrive extends SHPMecanumDrive {
     private final double[] setpoints;
@@ -18,8 +18,8 @@ public class SHPRunnerMecanumDrive extends SHPMecanumDrive {
         resetEncoders();
     }
 
-    public void follow(Point point) {
-        setPositions(point.getSetpoints());
+    public void follow() {
+        setPositions(setpoints);
     }
 
     public void translateTo(double leftFront, double leftRear, double rightFront, double rightRear) {

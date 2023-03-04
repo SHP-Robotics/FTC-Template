@@ -9,8 +9,6 @@ public class Constants {
     // Target voltage for voltage compensation
     public static final double kNominalVoltage = 12.0;
 
-    public static double kTopSetpoint = 2000.0;
-
     public static final class Drive {
         public static final String[] kMotorNames = new String[]{
                 "leftFront",
@@ -24,8 +22,8 @@ public class Constants {
                 new FFController(0.045),
                 new FFController(0.035)
         };
-        public static final double kMinimumBias = 0.4;
-        public static final double kMaximumBias = 1.0;
+        public static final double kMinimumBias = 0.3;
+        public static final double kMaximumBias = 0.6;
     }
 
     public static final class Vision {
@@ -34,8 +32,8 @@ public class Constants {
 
     public static final class Arm {
         public static final String kClawName = "claw";
-        public static final double kClawOpen = 0.2;
-        public static final double kClawClosed = 0.5;
+        public static final double kClawOpen = 0.4;
+        public static final double kClawClosed = 0.7;
 
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
@@ -47,19 +45,11 @@ public class Constants {
         public static final double kSlideHigh = 4000.0;
         public static final double kSlideStackDistance = 150.0;
 
-        public static final double kSlideP = 0.17;
+        public static final double kSlideP = 0.0018;
         public static final double kSlideD = 0;
         public static final double kSlideTolerance = 100;
 
         public static final double kSlideS = 0.035; // static friction
         public static final double kSlideG = 0.07; // gravity
-    }
-
-    public static final class Scoop {
-        public static final String kScoopName = "scoop";
-
-        public static final double kTop = 0.5;
-        public static final double kMiddle = 0.9;
-        public static final double kBottom = 1.0;
     }
 }
