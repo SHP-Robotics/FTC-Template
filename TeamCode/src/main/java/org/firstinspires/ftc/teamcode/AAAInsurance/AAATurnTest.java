@@ -1,78 +1,78 @@
-package org.firstinspires.ftc.teamcode.AAAInsurance;
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
-import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
-import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
-import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
-import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
-
-@TeleOp
-public class AAATurnTest extends BaseRobot {
-    //DriveSubsystem drive;
-    private double debounce;
-    private int desiredPosition;
-    private double maxSpeed;
-    private ArmSubsystem.State topState;
-    @Override
-    public void init() {
-        super.init();
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
-        // Default command runs when no other commands are scheduled for the subsystem
-        drive.setDefaultCommand(
-                new RunCommand(
-                        () ->
-                                drive.automecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x)
-                )
-        );
-
-        arm.resetEncoder();
-        drive.parallelEncoder.resetEncoder();
-        drive.perpendicularEncoder.resetEncoder();
-
-        telemetry.addData("slide ticks: ", arm.slide.getPosition(MotorUnit.TICKS));
-        ArmSubsystem.State topState = ArmSubsystem.State.TOP;
-
-        new RunCommand(( () -> {arm.setState(ArmSubsystem.State.BOTTOM);}));
-
-
-    }
-    @Override
-    public void start() {
-        super.start();
-
-        debounce = Clock.now();
-        arm.override = false;
-        maxSpeed = 0.75; //TODO: SPEED HERE
-        topState = ArmSubsystem.State.TOP;
-
-        CommandScheduler myCommand = CommandScheduler.getInstance();
-        myCommand.scheduleCommand(
-                new RunCommand(() -> {
-                    claw.setState(ClawSubsystem.State.CLOSED);
-                })
-                        .then(new EncoderTurnDriveCommand(drive,"cw",180))
-                        .then(new EncoderTurnDriveCommand(drive,"ccw",-90))
-        );
-
-
-    }
-
-    @Override
-    public void loop() {
-        super.loop();
-        telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
-        telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());
-        telemetry.addData("IMU", drive.imu.getIntegratedHeading());
-
-    }
-}
+//package org.firstinspires.ftc.teamcode.AAAInsurance;
+//
+//import com.acmerobotics.dashboard.FtcDashboard;
+//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+//import com.qualcomm.robotcore.util.Range;
+//
+//import org.firstinspires.ftc.teamcode.BaseRobot;
+//import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
+//import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
+//import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
+//import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
+//import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
+//import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
+//
+//@TeleOp
+//public class AAATurnTest extends BaseRobot {
+//    //DriveSubsystem drive;
+//    private double debounce;
+//    private int desiredPosition;
+//    private double maxSpeed;
+//    private ArmSubsystem.State topState;
+//    @Override
+//    public void init() {
+//        super.init();
+//
+//        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//
+//        // Default command runs when no other commands are scheduled for the subsystem
+//        drive.setDefaultCommand(
+//                new RunCommand(
+//                        () ->
+//                                drive.automecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x)
+//                )
+//        );
+//
+//        arm.resetEncoder();
+//        drive.parallelEncoder.resetEncoder();
+//        drive.perpendicularEncoder.resetEncoder();
+//
+//        telemetry.addData("slide ticks: ", arm.slide.getPosition(MotorUnit.TICKS));
+//        ArmSubsystem.State topState = ArmSubsystem.State.TOP;
+//
+//        new RunCommand(( () -> {arm.setState(ArmSubsystem.State.BOTTOM);}));
+//
+//
+//    }
+//    @Override
+//    public void start() {
+//        super.start();
+//
+//        debounce = Clock.now();
+//        arm.override = false;
+//        maxSpeed = 0.75; //TODO: SPEED HERE
+//        topState = ArmSubsystem.State.TOP;
+//
+//        CommandScheduler myCommand = CommandScheduler.getInstance();
+//        myCommand.scheduleCommand(
+//                new RunCommand(() -> {
+//                    claw.setState(ClawSubsystem.State.CLOSED);
+//                })
+//                        .then(new EncoderTurnDriveCommand(drive,"cw",180))
+//                        .then(new EncoderTurnDriveCommand(drive,"ccw",-90))
+//        );
+//
+//
+//    }
+//
+//    @Override
+//    public void loop() {
+//        super.loop();
+//        telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
+//        telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());
+//        telemetry.addData("IMU", drive.imu.getIntegratedHeading());
+//
+//    }
+//}

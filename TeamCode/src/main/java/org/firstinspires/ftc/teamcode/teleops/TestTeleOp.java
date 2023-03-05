@@ -33,7 +33,7 @@ private ArmSubsystem.State topState;
         drive.setDefaultCommand(
                 new RunCommand(
                         () ->
-                                drive.normalmecanum(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x)
+                                drive.mecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
                 )
         );
 
@@ -66,7 +66,8 @@ private ArmSubsystem.State topState;
 
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
-//        drive.setDriveBias(arm.getCarryingDriveBias(), maxSpeed);
+
+        drive.setDriveBias(arm.getDriveBias(claw.isClawOpen()), 0);
         telemetry.addData("max speed: ", maxSpeed);
         telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
         telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());

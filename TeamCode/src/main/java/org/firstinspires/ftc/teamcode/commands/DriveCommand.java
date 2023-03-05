@@ -40,7 +40,7 @@ public class DriveCommand extends Command {
     @Override
     public void execute() {
         if (!robot)
-            drive.mecanum(leftY,leftX,rightX);
+            drive.automecanum(leftY,leftX,rightX);
         else
             drive.normalmecanum(leftY,leftX,rightX);
 

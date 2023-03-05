@@ -54,6 +54,15 @@ public class BaseRobot extends OpMode {
 
     }
 
+    @Override
+    public void init_loop() {
+        try {
+            CommandScheduler.getInstance().run();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Called when you press the start button
     @Override
     public void start() {
