@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous
-public class AAA1p2LeftMid extends BaseRobot {
+public class AAA1p1LeftMid extends BaseRobot {
     //DriveSubsystem drive;
     private double debounce;
     private int desiredPosition;

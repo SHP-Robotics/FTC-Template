@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.AAAInsurance;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DriveCommand;
@@ -18,7 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous
-public class AAA1p2LeftMid extends BaseRobot {
+public class AAA1p1RightMid extends BaseRobot {
     //DriveSubsystem drive;
     private double debounce;
     private int desiredPosition;
@@ -77,7 +76,6 @@ public class AAA1p2LeftMid extends BaseRobot {
             } else if (tagID==7) {
                 driveCommand = new DriveCommand(drive, 0, -0.5, 0.0, 1.2, false);
             }
-
         }
         else {
             driveCommand = new DriveCommand(drive, -0.3, 0, 0, 0.5, false);
@@ -100,7 +98,6 @@ public class AAA1p2LeftMid extends BaseRobot {
                         .then(new RunCommand(() -> {
                             arm.setState(ArmSubsystem.State.CARRYING);
                         }))
-                        .then(new EncoderStrafeDriveCommand(drive,"right",  21, false))
 
                         .then(new RunCommand(()->{
                             arm.setState(ArmSubsystem.State.MIDDLE);
@@ -116,7 +113,35 @@ public class AAA1p2LeftMid extends BaseRobot {
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.BOTTOM);}))
                         // FORWARD AND TURN TOWARD STACKED CONE 1
                         .then(new WaitCommand(0.5))
-                        .then(new EncoderStraightDriveCommand(drive, "backward", 15))
+                        .then(new EncoderStraightDriveCommand(drive, "forward", 15))
+                        .then(new WaitCommand(0.5))
+                        .then(new EncoderStraightDriveCommand(drive, "backward", 1.75))
+                        .then(new WaitCommand(0.5))
+                        .then(new EncoderTurnDriveCommand(drive, "cw",173))
+                        .then(new RunCommand(()->{
+                            arm.setState(ArmSubsystem.State.STACKED_CONES);
+                        }))
+                        //GO TO PICK UP STACKED CONES
+                        .then(new WaitCommand(0.5))
+                        .then(new EncoderStrafeDriveCommand(drive,"right",  21.4, false))
+                        .then(new WaitCommand(1))
+                        .then(new RunCommand(()->{
+                            claw.setState(ClawSubsystem.State.CLOSED);
+                        }))
+                        .then(new WaitCommand(0.25))
+                        .then(new RunCommand(()->{
+                            arm.setState(ArmSubsystem.State.MIDDLE);
+                        }))
+                        .then(new WaitCommand(0.5))
+                        //STRAFE BACK TOWARDS HIGH POLE TO DROP STACKED CONE 1
+
+                        .then(new EncoderStrafeDriveCommand(drive,"left",  37.5, false))
+                        .then(new WaitCommand(0.5))
+                        .then(new EncoderTurnDriveCommand(drive, "cw",270))
+                        .then(new WaitCommand(0.5))
+                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
+                        .then(new WaitCommand(1))
+                        //DRIVE AND DROP
 
                         /*
                         .then (new DriveCommand(drive, -0.25, 0, 0.0, strafeTime, true))
@@ -126,7 +151,7 @@ public class AAA1p2LeftMid extends BaseRobot {
                          */
 
                         //TURN BACK TOWARDS STACK FOR STACK CONE 2 and DRIVE RIGHT
-
+                        .then(new EncoderTurnDriveCommand(drive, "cw",360))
                         //.then(new EncoderStraightDriveCommand(drive, "forward", 0.5))
                         /*
                         .then(new WaitCommand(0.5))
@@ -148,8 +173,8 @@ public class AAA1p2LeftMid extends BaseRobot {
                         .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
                         .then(new DriveCommand(drive, 0.25, 0, 0.0, strafeTime+0.2, true))
                          */
-
-                        .then(new EncoderStrafeDriveCommand(drive, "left",20, false))
+                        .then(new EncoderStrafeDriveCommand(drive, "right",11, false))
+                        .then(new EncoderStraightDriveCommand(drive, "backwards",22))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.BOTTOM);}))
                         .then(new WaitCommand(0.50))
 

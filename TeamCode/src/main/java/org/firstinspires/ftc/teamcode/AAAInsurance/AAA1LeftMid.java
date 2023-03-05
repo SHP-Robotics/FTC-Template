@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous
-public class AAA1p2LeftMid extends BaseRobot {
+public class AAA1LeftMid extends BaseRobot {
     //DriveSubsystem drive;
     private double debounce;
     private int desiredPosition;
@@ -117,37 +117,6 @@ public class AAA1p2LeftMid extends BaseRobot {
                         // FORWARD AND TURN TOWARD STACKED CONE 1
                         .then(new WaitCommand(0.5))
                         .then(new EncoderStraightDriveCommand(drive, "backward", 15))
-
-                        /*
-                        .then (new DriveCommand(drive, -0.25, 0, 0.0, strafeTime, true))
-                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
-                        .then(new DriveCommand(drive, 0.25, 0, 0.0, strafeTime, true))
-
-                         */
-
-                        //TURN BACK TOWARDS STACK FOR STACK CONE 2 and DRIVE RIGHT
-
-                        //.then(new EncoderStraightDriveCommand(drive, "forward", 0.5))
-                        /*
-                        .then(new WaitCommand(0.5))
-                        .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.STACKED_CONES);}))
-                        .then(new EncoderStrafeDriveCommand(drive,"right",  34, false))
-                        .then(new WaitCommand(0.5))
-                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.CLOSED);}))
-                        .then(new WaitCommand(0.25))
-                        .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.MIDDLE);}))
-                        .then(new WaitCommand(0.5))
-
-                        //DRIVE BACK TOWARDS MIDDLE POLE TO DROP STACKED CONE 2
-                        .then(new EncoderStrafeDriveCommand(drive,"left",  34, false))
-                        .then(new EncoderTurnDriveCommand(drive, "cw",270))
-                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
-                        */
-                        /*
-                        .then (new DriveCommand(drive, -0.25, 0, 0.0, strafeTime, true))
-                        .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
-                        .then(new DriveCommand(drive, 0.25, 0, 0.0, strafeTime+0.2, true))
-                         */
 
                         .then(new EncoderStrafeDriveCommand(drive, "left",20, false))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.BOTTOM);}))

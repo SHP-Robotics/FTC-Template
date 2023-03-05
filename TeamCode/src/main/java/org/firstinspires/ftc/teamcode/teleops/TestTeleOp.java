@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
@@ -23,6 +24,9 @@ private double debounce;
 private int desiredPosition;
 private double maxSpeed;
 private ArmSubsystem.State topState;
+RevBlinkinLedDriver blinkinLedDriver;
+RevBlinkinLedDriver.BlinkinPattern pattern;
+
     @Override
     public void init() {
         super.init();
@@ -41,6 +45,9 @@ private ArmSubsystem.State topState;
         drive.parallelEncoder.resetEncoder();
         drive.perpendicularEncoder.resetEncoder();
 
+        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+        pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
+        blinkinLedDriver.setPattern(pattern);
         telemetry.addData("slide ticks: ", arm.slide.getPosition(MotorUnit.TICKS));
         ArmSubsystem.State topState = ArmSubsystem.State.TOP;
 
@@ -91,13 +98,30 @@ private ArmSubsystem.State topState;
 
         //setting top position
         new Trigger(gamepad2.a,
-                new RunCommand(( () -> {topState = ArmSubsystem.State.CARRYING;})));
+                new RunCommand(( () -> {
+                    topState = ArmSubsystem.State.CARRYING;
+                    pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+                    blinkinLedDriver.setPattern(pattern);
+                })));
         new Trigger(gamepad2.b,
-                new RunCommand(( () -> {topState = ArmSubsystem.State.SHORT;})));
+                new RunCommand(( () -> {
+                    topState = ArmSubsystem.State.SHORT;
+                    pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+                    blinkinLedDriver.setPattern(pattern);
+                })));
         new Trigger(gamepad2.x,
-                new RunCommand(( () -> {topState = ArmSubsystem.State.MIDDLE;})));
+                new RunCommand(( () -> {
+                    topState = ArmSubsystem.State.MIDDLE;
+                    pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+                    blinkinLedDriver.setPattern(pattern);
+                })));
         new Trigger(gamepad2.y,
-                new RunCommand(( () -> {topState = ArmSubsystem.State.TOP;})));
+                new RunCommand(( () -> {
+                    topState = ArmSubsystem.State.TOP;
+                    pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+                    blinkinLedDriver.setPattern(pattern);
+                })));
+
         new Trigger(gamepad2.dpad_up,
                 new RunCommand(( () -> {arm.incrementConeLevelUp();})));
         new Trigger(gamepad2.dpad_down,
@@ -170,6 +194,8 @@ private ArmSubsystem.State topState;
         new Trigger(gamepad1.a, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
             if (arm.getState() == ArmSubsystem.State.STACKED_CONES) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
+                blinkinLedDriver.setPattern(pattern);
                 claw.setState(ClawSubsystem.State.CLOSED);
                 CommandScheduler.getInstance().scheduleCommand(
                         new WaitCommand(0.3)
