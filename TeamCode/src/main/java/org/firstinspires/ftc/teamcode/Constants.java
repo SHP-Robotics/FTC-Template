@@ -31,13 +31,28 @@ public class Constants {
     }
 
     public static final class Arm {
+        // Servo Names
         public static final String kClawName = "claw";
+        public static final String kSwingLeftName = "swingLeft";
+        public static final String kSwingRightName = "swingRight";
+        public static final String kCounterSwingLeftName = "counterSwingLeft";
+        public static final String kCounterSwingRightName = "counterSwingRight";
+        // Servo Positions
         public static final double kClawOpen = 0.4;
         public static final double kClawClosed = 0.7;
 
-        public static final String kLeftSlideName = "leftSlide";
-        public static final String kRightSlideName = "rightSlide";
+        // do not believe any of these values, i made them all up - roshan
+        public static final double kSwingLeftUp = 0.0;
+        public static final double kSwingRightUp = 1.0;
+        public static final double kCounterSwingLeftUp = 0.0;
+        public static final double kCounterSwingRightUp = 1.0;
+        public static final double kSwingLeftDown = 0.5;
+        public static final double kSwingRightDown = 0.5;
+        public static final double kCounterSwingLeftDown = 0.5;
+        public static final double kCounterSwingRightDown = 0.5;
 
+        // Linear Slide Constants
+        public static final String kLinearSlideName = "linearSlide";
         public static final double kSlideBottom = 10.0;
         public static final double kSlideHub = 200.0;
         public static final double kSlideLow = 1000.0;
