@@ -5,9 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.CameraOn;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
@@ -22,9 +21,10 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 public class BaseRobot extends OpMode {
     // Declare subsystems and devices
-    public DriveSubsystem drive;
-    public VisionSubsystem vision;
-    public ArmSubsystem arm;
+//    public DriveSubsystem drive;
+//    ask Aayan how to see the telemetry take place - do you need a command?
+    public CameraOn vision;
+//    public ArmSubsystem arm;
 //    public ScoopSubsystem scoop;
 
     public double previousTime = 0;
@@ -36,9 +36,9 @@ public class BaseRobot extends OpMode {
         configure();
 
         // Initialize your subsystems and devices
-        drive = new DriveSubsystem(hardwareMap);
-//        vision = new VisionSubsystem(hardwareMap);
-        arm = new ArmSubsystem(hardwareMap);
+//        drive = new DriveSubsystem(hardwareMap);
+        vision = new CameraOn(hardwareMap);
+//        arm = new ArmSubsystem(hardwareMap);
 //        scoop = new ScoopSubsystem(hardwareMap);
 //        intake = new SHPMotor(hardwareMap, "intake");
 
