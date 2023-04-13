@@ -94,6 +94,7 @@ android {
             signingConfig signingConfigs.release
 
             ndk {
+                //commented out for easyopencv
 //                abiFilters "armeabi-v7a", "arm64-v8a"
                 abiFilters "armeabi-v7a"
             }
@@ -102,6 +103,7 @@ android {
             debuggable true
             jniDebuggable true
             ndk {
+                //commented out for easyopencv
 //                abiFilters "armeabi-v7a", "arm64-v8a"
                 abiFilters "armeabi-v7a"
             }
@@ -127,5 +129,7 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    //if cv doesn't work
+    //jcenter();
 }
 
