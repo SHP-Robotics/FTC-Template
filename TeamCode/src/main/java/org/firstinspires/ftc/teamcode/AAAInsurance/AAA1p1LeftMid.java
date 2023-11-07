@@ -37,12 +37,7 @@ public class AAA1p1LeftMid extends BaseRobot {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Default command runs when no other commands are scheduled for the subsystem
-        drive.setDefaultCommand(
-                new RunCommand(
-                        () ->
-                                drive.automecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x)
-                )
-        );
+
 
         arm.resetEncoder();
         drive.parallelEncoder.resetEncoder();

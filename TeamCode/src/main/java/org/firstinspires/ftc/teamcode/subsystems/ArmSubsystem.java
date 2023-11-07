@@ -86,8 +86,8 @@ public class ArmSubsystem extends Subsystem {
 
     public double getDriveBias(boolean clawOpen) {
         if(getState() != State.BOTTOM && getState() != State.CARRYING && getState() != State.STACKED_CONES){
-            if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.925)
-                return 0.2;
+            if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.95)
+                return 0.3;
             else if (slide.getPosition(MotorUnit.TICKS) > stateEncoderValue * 0.5)
                 return Math.abs(slide.getPosition(MotorUnit.TICKS) / stateEncoderValue - 1.0);
             else
@@ -133,6 +133,10 @@ public class ArmSubsystem extends Subsystem {
             coneLevel = 5;
         else
             coneLevel--;
+    }
+
+    public int getConeLevel() {
+        return coneLevel;
     }
     public void incrementConeLevelUp() {
         coneLevel++;
@@ -196,7 +200,7 @@ public class ArmSubsystem extends Subsystem {
                     slide.setPosition(Constants.Arm.K_SLIDE_TOP - 500);
                     break;
                 case STACKED_CONES:
-                    slide.setPosition(coneLevel*180);
+                    slide.setPosition(coneLevel*165);
                     break;
                 case MANUAL:
                     slide.setPosition(manualPosition);

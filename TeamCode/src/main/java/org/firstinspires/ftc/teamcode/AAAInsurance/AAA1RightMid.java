@@ -37,12 +37,7 @@ public class AAA1RightMid extends BaseRobot {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Default command runs when no other commands are scheduled for the subsystem
-        drive.setDefaultCommand(
-                new RunCommand(
-                        () ->
-                                drive.automecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x)
-                )
-        );
+
 
         arm.resetEncoder();
         drive.parallelEncoder.resetEncoder();
@@ -105,18 +100,19 @@ public class AAA1RightMid extends BaseRobot {
                         }))
                         //DROP FIRST CONE
                         .then(new EncoderStraightDriveCommand(drive,"forward",38.5))
-                        .then(new EncoderStrafeDriveCommand(drive,"left",  .75, false))
+
+                        .then(new DriveCommand(drive, 0, -0.2, 0, 0.2, true))
                         .then(new WaitCommand(0.25))
                         .then(new RunCommand(()->{claw.setState(ClawSubsystem.State.OPEN);}))
                         .then(new WaitCommand(0.5))
-                        .then(new EncoderStrafeDriveCommand(drive,"right",  .75, false))
+                        .then(new DriveCommand(drive, 0, 0.2, 0, 0.2, true))
                         .then(new WaitCommand(0.25))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.BOTTOM);}))
                         // FORWARD AND TURN TOWARD STACKED CONE 1
                         .then(new WaitCommand(0.5))
                         .then(new EncoderStraightDriveCommand(drive, "backward", 15))
 
-                        .then(new EncoderStrafeDriveCommand(drive, "left",20, false))
+                        //.then(new EncoderStrafeDriveCommand(drive, "left",20, false))
                         .then(new RunCommand(()->{arm.setState(ArmSubsystem.State.BOTTOM);}))
                         .then(new WaitCommand(0.50))
 

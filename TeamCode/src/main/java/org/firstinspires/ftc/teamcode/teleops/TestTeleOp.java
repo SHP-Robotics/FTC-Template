@@ -24,8 +24,8 @@ private double debounce;
 private int desiredPosition;
 private double maxSpeed;
 private ArmSubsystem.State topState;
-RevBlinkinLedDriver blinkinLedDriver;
-RevBlinkinLedDriver.BlinkinPattern pattern;
+//RevBlinkinLedDriver blinkinLedDriver;
+//RevBlinkinLedDriver.BlinkinPattern pattern;
 
     @Override
     public void init() {
@@ -45,13 +45,13 @@ RevBlinkinLedDriver.BlinkinPattern pattern;
         drive.parallelEncoder.resetEncoder();
         drive.perpendicularEncoder.resetEncoder();
 
-        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
-        pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
-        blinkinLedDriver.setPattern(pattern);
+        //blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+//        pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
+        //blinkinLedDriver.setPattern(pattern);
         telemetry.addData("slide ticks: ", arm.slide.getPosition(MotorUnit.TICKS));
         ArmSubsystem.State topState = ArmSubsystem.State.TOP;
 
-        new RunCommand(( () -> {arm.setState(ArmSubsystem.State.BOTTOM);}));
+        //new RunCommand(( () -> {arm.setState(ArmSubsystem.State.BOTTOM);}));
 
     }
 
@@ -75,10 +75,11 @@ RevBlinkinLedDriver.BlinkinPattern pattern;
         super.loop();
 
         drive.setDriveBias(arm.getDriveBias(claw.isClawOpen()), 0);
-        telemetry.addData("max speed: ", maxSpeed);
-        telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
-        telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());
+        //telemetry.addData("max speed: ", maxSpeed);
+        //telemetry.addData("Y Ticks", drive.parallelEncoder.getCurrentPosition());
+        //telemetry.addData("X Ticks", drive.perpendicularEncoder.getCurrentPosition());
         telemetry.addData("integrated heading", drive.imu.getIntegratedHeading());
+        telemetry.addData("Stack Index: ", arm.getConeLevel());
 //        telemetry.addData("integrated heading + 180", Math.toDegrees(drive.imu.getIntegratedHeading())+180);
 
         //telemetry.addData("SLIDE ENCODER: ", arm.slide.getPosition(MotorUnit.TICKS));
@@ -100,32 +101,39 @@ RevBlinkinLedDriver.BlinkinPattern pattern;
         new Trigger(gamepad2.a,
                 new RunCommand(( () -> {
                     topState = ArmSubsystem.State.CARRYING;
-                    pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-                    blinkinLedDriver.setPattern(pattern);
+//                    pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+//                    blinkinLedDriver.setPattern(pattern);
                 })));
         new Trigger(gamepad2.b,
                 new RunCommand(( () -> {
                     topState = ArmSubsystem.State.SHORT;
-                    pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
-                    blinkinLedDriver.setPattern(pattern);
+//                    pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+//                    blinkinLedDriver.setPattern(pattern);
                 })));
         new Trigger(gamepad2.x,
                 new RunCommand(( () -> {
                     topState = ArmSubsystem.State.MIDDLE;
-                    pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
-                    blinkinLedDriver.setPattern(pattern);
+//                    pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+//                    blinkinLedDriver.setPattern(pattern);
                 })));
         new Trigger(gamepad2.y,
                 new RunCommand(( () -> {
                     topState = ArmSubsystem.State.TOP;
-                    pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
-                    blinkinLedDriver.setPattern(pattern);
+//                    pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+//                    blinkinLedDriver.setPattern(pattern);
                 })));
 
         new Trigger(gamepad2.dpad_up,
-                new RunCommand(( () -> {arm.incrementConeLevelUp();})));
+                new RunCommand(( () -> {
+                    if (!Clock.hasElapsed(debounce, 0.5)) return;
+                    debounce = Clock.now();
+                    arm.incrementConeLevelUp();})));
+
         new Trigger(gamepad2.dpad_down,
-                new RunCommand(( () -> {arm.incrementConeLevelDown();})));
+                new RunCommand(( () -> {
+                    if (!Clock.hasElapsed(debounce, 0.5)) return;
+                    debounce = Clock.now();
+                    arm.incrementConeLevelDown();})));
 
         //KEEP FOR NOW INCASE AARAV CODE DOES NOT WORK WHICH IT PROBABLY WILL NOT
         /*new Trigger(gamepad1.right_bumper, new DumpCargoCommand(scoop, DumpCargoCommand.State.IN)
@@ -194,20 +202,20 @@ RevBlinkinLedDriver.BlinkinPattern pattern;
         new Trigger(gamepad1.a, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
             if (arm.getState() == ArmSubsystem.State.STACKED_CONES) {
-                pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
-                blinkinLedDriver.setPattern(pattern);
+//                pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
+//                blinkinLedDriver.setPattern(pattern);
                 claw.setState(ClawSubsystem.State.CLOSED);
                 CommandScheduler.getInstance().scheduleCommand(
                         new WaitCommand(0.3)
                                 .then(new RunCommand(() -> {
-                                    arm.setState(ArmSubsystem.State.SHORT);
+                                    arm.setState(ArmSubsystem.State.TOP_OF_SHORT);
 
                                 }))
-                                .then(new WaitCommand(0.75))
+                                /*.then(new WaitCommand(0.75))
                                 .then(new RunCommand(() -> {
                                     arm.setState(topState);
 
-                                }))
+                                }))*/
 
                 );
             }
@@ -226,7 +234,7 @@ RevBlinkinLedDriver.BlinkinPattern pattern;
             else if (!claw.isClawOpen() && arm.getState() != ArmSubsystem.State.BOTTOM) {    // (arm.getState() == topState || (!claw.isClawOpen() && arm.getState() == ArmSubsystem.State.MANUAL))
                 claw.setState(ClawSubsystem.State.OPEN);
                 CommandScheduler.getInstance().scheduleCommand(
-                        new WaitCommand(0.75)
+                        new WaitCommand(1)
                                 .then(new RunCommand(() -> {
                                     arm.setState(ArmSubsystem.State.BOTTOM);
                                 })));
