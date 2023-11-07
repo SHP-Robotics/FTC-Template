@@ -129,7 +129,7 @@ public class ArmSubsystem extends Subsystem {
                 return rightSlide.setPosition(kSlideMiddle);
 //                break;
             case HIGH:
-                leftSlide.setPosition(kSlideHigh);
+                leftSlide.setPositionn(kSlideHigh);
                 return rightSlide.setPosition(kSlideHigh);
 //                break;
             case STACK:
